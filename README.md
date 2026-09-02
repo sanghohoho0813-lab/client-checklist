@@ -29,19 +29,20 @@
    - Build Command / Output Directory: **비워둠** (정적 파일이라 빌드 불필요)
 4. **Deploy** 클릭 → 약 20초 후 `https://client-checklist-xxxx.vercel.app` 링크 발급
 
-### Production 브랜치 확인
-Vercel은 **GitHub 기본 브랜치(default branch)** 를 실서비스로 배포합니다.
-현재 이 저장소의 기본 브랜치는 `claude/github-vercel-setup-mn83yv` 입니다.
+### 브랜치 구성
+Vercel은 **GitHub 기본 브랜치(default branch)** 를 실서비스(Production)로 배포합니다.
 
-- 이름을 정리하고 싶으면: GitHub → **Settings → Branches → 기본 브랜치를 `main` 으로 rename**
-- 이미 Vercel을 연결한 뒤 이름을 바꿨다면: Vercel → **Settings → Git → Production Branch** 를 같은 이름으로 맞춰주세요
+- `main` — 기본 브랜치. 여기에 올라간 내용이 고객에게 공유하는 **실제 링크**가 됩니다.
+- `claude/github-vercel-setup-mn83yv` — 최초 세팅 작업 브랜치(`main` 과 동일 내용). 정리하고 싶으면 삭제해도 됩니다.
+
+앞으로 수정은 `main` 에 push 하면 됩니다.
 
 ### 도메인 연결 (선택)
 Vercel → **Settings → Domains** 에서 `ax.회사도메인.com` 같은 주소를 연결할 수 있습니다.
 링크가 짧고 회사 도메인이면 카톡 전달 시 신뢰도가 올라갑니다.
 
 ### 수정 반영
-`index.html` 을 수정해서 이 브랜치에 push 하면 Vercel이 자동으로 재배포합니다.
+`index.html` 을 수정해서 `main` 에 push 하면 Vercel이 자동으로 재배포합니다.
 `index.html` 에는 캐시 무효화 헤더가 걸려 있어 고객이 새로고침하면 항상 최신 버전을 봅니다.
 
 ---
