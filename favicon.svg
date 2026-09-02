@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="MIRAE AI LAB AX">
+  <rect width="64" height="64" rx="14" fill="#17202b"/>
+  <path d="M14 46 L23.5 18 h5 L38 46 h-6.2 l-1.9-6.1h-8.4L19.6 46z m7.2-11h6.1l-3-9.6z" fill="#c5a15a"/>
+  <path d="M40 18 h6.4l3.2 5.7 3.2-5.7H59l-6.3 10.4L59 46h-6.5l-3.1-8.2L46.3 46H40l6.3-17.6z" fill="#ffffff"/>
+</svg>

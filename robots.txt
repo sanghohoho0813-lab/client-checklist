@@ -1,0 +1,4 @@
+# 고객 전용 체크리스트 링크입니다. 검색엔진 노출을 원하면 아래 두 줄을 지우고
+# index.html 의 <meta name="robots" content="noindex,nofollow"> 도 함께 삭제하세요.
+User-agent: *
+Disallow: /
