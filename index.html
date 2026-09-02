@@ -100,12 +100,33 @@
 .previtem b{display:block;font-size:13px;font-weight:900;color:#8a6d33;margin-bottom:4px}
 .previtem span{font-size:14.5px;color:#334155;word-break:keep-all}
 
+/* ===== 등장 모션 (은은하게) ===== */
+.reveal{opacity:0;transform:translateY(22px) scale(.988);transition:opacity .78s cubic-bezier(.16,1,.3,1),transform .78s cubic-bezier(.16,1,.3,1)}
+.reveal.in{opacity:1;transform:none}
+.guidecard{transition:box-shadow .4s ease,border-color .4s ease,opacity .78s cubic-bezier(.16,1,.3,1),transform .78s cubic-bezier(.16,1,.3,1)}
+.guidecard:hover{box-shadow:0 20px 46px rgba(15,23,42,.13);border-color:#e6d3ab}
+.imgwrap{position:relative;overflow:hidden;border-radius:11px;background:#f4f6f8}
+.imgwrap img{display:block;width:100%;height:auto;cursor:zoom-in;transition:transform 1.2s cubic-bezier(.16,1,.3,1)}
+.guidecard:hover .imgwrap img{transform:scale(1.014)}
+.sheen{position:absolute;inset:0;pointer-events:none;transform:translateX(-130%);background:linear-gradient(105deg,rgba(255,255,255,0) 34%,rgba(255,255,255,.42) 46%,rgba(255,255,255,.72) 50%,rgba(255,255,255,.42) 54%,rgba(255,255,255,0) 66%)}
+.guidecard.in .sheen{animation:sheen 1.35s cubic-bezier(.33,0,.15,1) .28s 1 forwards}
+@keyframes sheen{from{transform:translateX(-130%)}to{transform:translateX(130%)}}
+.guidecard.in .zoomhint{animation:hintpop .5s cubic-bezier(.16,1,.3,1) .9s backwards}
+@keyframes hintpop{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){.reveal,.guidecard,.imgwrap img{transition:none!important}.reveal{opacity:1!important;transform:none!important}.sheen{display:none}.guidecard.in .zoomhint{animation:none}}
+@media print{.reveal{opacity:1!important;transform:none!important}.sheen{display:none}}
+
+/* ===== 여백 ===== */
+.layout{margin-top:34px}
+.guidewrap{margin-bottom:22px}
+
 /* 서술형 답변 */
 .longtext{min-height:120px}
 
 /* ===== 반응형 ===== */
 @media(max-width:900px){
 .brandbar{padding:0 2px 11px;gap:9px}.brandbar img{height:28px}.brandbar-sub{font-size:12px;padding-left:9px}
+.layout{margin-top:24px}.guidewrap{margin-bottom:14px}
 .phasetabs{grid-template-columns:1fr;gap:8px;margin-top:13px}.phasetab{padding:13px 15px;border-radius:13px}.phasetab b{font-size:16px}
 .guidehead{padding:21px 17px;border-radius:18px}.guidehead h2{font-size:21.5px}.guidehead p{font-size:15.2px}
 .guidecard{padding:9px;border-radius:15px}.guidecard figcaption{flex-direction:column;align-items:flex-start;gap:6px;font-size:13px}
@@ -253,12 +274,18 @@ function renderSection(s){const[num,title,desc,level,qs]=s,c=secColors[num],subs
 function render(){const sp=spec(),all=sp.core.concat(sp.optional);
 nav.innerHTML=`<button class="navbtn" data-target="guideTop" data-color="#17202b" onclick="goTo('guideTop')"><span class="navdot" style="background:#c5a15a"></span><span class="navtext">${phase===2?"2차 안내":"시작 전 안내"}</span><span class="tag optional">안내</span></button>`+all.map(x=>{const c=secColors[x[0]],req=x[3]==="필수";return `<button class="navbtn" data-target="sec_${x[0]}" data-color="${c.main}" onclick="goTo('sec_${x[0]}')"><span class="navdot" style="background:${c.main}"></span><span class="navtext">${x[0]} · ${esc(x[1])}</span><span class="tag ${req?"required":"optional"}">${req?"필수":"선택"}</span></button>`}).join("");
 content.innerHTML=introHTML()+sp.core.map(renderSection).join("")+(sp.optional.length?`<div class="optional-intro"><h2>선택 참고사항</h2>아래 내용은 이미 기본 설계에 포함되어 있거나, MVP 이후 실증과정에서 충분히 보완할 수 있는 정보입니다. <b>꼭 작성하지 않으셔도 됩니다.</b> 다만 현재 상황이나 향후 계획을 조금 더 알려주고 싶은 분만 편하게 입력해주세요.</div>`+sp.optional.map(renderSection).join(""):"")+`<div class="free-note"><h2>추가로 전달하고 싶은 내용 <span style="font-size:13px;color:#94a3b8">(선택사항)</span></h2><div class="hint">예: “현장 직원이 스마트폰으로 최대한 간단하게 쓰게 해주세요.”<br>예: “기존 엑셀 양식의 고객번호와 거래처 구분은 꼭 유지하고 싶습니다.”</div><textarea placeholder="자유롭게 입력해주세요." oninput="state.__freeNote=this.value;save()">${esc(state.__freeNote||"")}</textarea></div>`+finishBlock();
-syncTabs();updateProgress();renderTimes();setupObserver()}
+syncTabs();updateProgress();renderTimes();setupObserver();setupReveal()}
 function pickSingle(k,v){state[k]=v;save();if(k==="industry"){const y=window.scrollY;render();window.scrollTo(0,y)}}
 function finishBlock(){return `<div class="finish"><h2>${phase===2?"2차 체크리스트 작성이 끝나셨나요?":"작성이 끝나셨나요?"}</h2><p>아래 버튼으로 결과를 저장한 뒤 담당자에게 전달해주세요.</p><div id="finishStage" class="finish-stage">필수 0 / 9 완료</div><div class="finish-actions"><button class="bigbtn" onclick="saveKakaoResult()">카톡용 저장<small>복사 + TXT 파일 저장</small></button><button class="bigbtn pdf" onclick="makePDF()">PDF 저장<small>인쇄 화면에서 PDF 선택</small></button></div><p class="finish-hint">작성 내용은 이 기기에 자동 저장되어 있어, 중간에 나갔다가 다시 들어와도 이어서 작성하실 수 있습니다.</p></div>`}
 function toggleMulti(k,v,c){let a=Array.isArray(state[k])?state[k]:[];if(c&&!a.includes(v))a.push(v);if(!c)a=a.filter(x=>x!==v);state[k]=a;save()}
 function isAnswered(q){const[t,k]=q,v=state[k];if(t==="confirm")return v===true;if(Array.isArray(v))return v.length>0;return String(v||"").trim()!==""}
 function updateProgress(){const sp=spec();const completed=sp.core.filter(sec=>sec[4].every(isAnswered)).length;const total=sp.core.length;const p=Math.round(completed/total*100);pct.textContent=p+"%";bar.style.width=p+"%";progressFloatPct.textContent=p+"%";progressFloatFill.style.width=p+"%";progressFloatStage.textContent=`${completed} / ${total} 완료`;const fst=document.getElementById("finishStage");if(fst){fst.textContent=completed===total?`필수 항목 ${total}개를 모두 작성하셨습니다.`:`필수 ${total}개 중 ${completed}개 완료 · 남은 항목이 있어도 저장할 수 있습니다.`}if(state.__startedAt||completed>0)progressFloat.classList.add("show");else progressFloat.classList.remove("show")}
+function setupReveal(){const els=[...document.querySelectorAll(".reveal")];if(!els.length)return;
+const reduce=window.matchMedia&&window.matchMedia("(prefers-reduced-motion:reduce)").matches;
+if(reduce||!("IntersectionObserver" in window)){els.forEach(e=>e.classList.add("in"));return}
+if(window.__rv)window.__rv.disconnect();
+const ob=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add("in");ob.unobserve(e.target)}}),{rootMargin:"0px 0px -6% 0px",threshold:.06});
+window.__rv=ob;els.forEach(e=>ob.observe(e))}
 function setupObserver(){const ss=[...document.querySelectorAll("[data-navtarget]")];if(window.__ob)window.__ob.disconnect();if(!ss.length)return;const ob=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){document.querySelectorAll(".navbtn").forEach(b=>{b.classList.remove("active");b.style.background=""});const b=document.querySelector('.navbtn[data-target="'+e.target.id+'"]');if(b){b.classList.add("active");b.style.background=b.dataset.color||"#17202b"}}}),{rootMargin:"-20% 0px -65% 0px"});window.__ob=ob;ss.forEach(x=>ob.observe(x))}
 function startTimer(){ensureStarted();save();progressFloat.classList.add("show");timerFloat.classList.add("show");timerFloat.classList.remove("expanded");timer.running=true;timer.paused=false;if(timer.interval)clearInterval(timer.interval);timer.interval=setInterval(()=>{if(!timer.paused&&timer.remaining>0){timer.remaining--;updateTimer()}if(timer.remaining<=0){clearInterval(timer.interval);timer.running=false;timerTime.textContent="00:00";pauseBtn.textContent="완료"}},1000);updateTimer()}
 function updateTimer(){const m=Math.floor(timer.remaining/60),s=timer.remaining%60;timerTime.textContent=String(m).padStart(2,"0")+":"+String(s).padStart(2,"0");pauseBtn.textContent=timer.paused?"계속":"일시정지"}
@@ -299,7 +326,7 @@ if(s)s.innerHTML=phase===2?
 '<div class="hero-summary-item"><b>왜 작성하나요?</b><span>업무 우선순위·필요 기능·디자인 방향을 정확히 맞추기 위해서입니다.</span></div><div class="hero-summary-item"><b>예상 시간</b><span>약 10~15분</span></div><div class="hero-summary-item"><b>작성 중단</b><span>중간에 멈춰도 자동 저장됩니다.</span></div>'}
 /* ===== 안내 자료 (첨부 이미지 원본) ===== */
 const GUIDES=[["guide-1-flow","AX 개발 전체 흐름 한눈에 보기"],["guide-2-structure","개발 & 운영 구조 이해하기"],["guide-3-cost","비용 & 운영 안내"]];
-function guideCard(i){const g=GUIDES[i];return `<figure class="guidecard"><picture><source srcset="assets/${g[0]}.webp" type="image/webp"><img src="assets/${g[0]}.jpg" alt="${esc(g[1])}" loading="lazy" onclick="openLightbox(${i})"></picture><figcaption><b>${esc(g[1])}</b><span class="zoomhint">눌러서 크게 보기</span></figcaption></figure>`}
+function guideCard(i){const g=GUIDES[i];return `<figure class="guidecard reveal" style="transition-delay:${i*90}ms"><div class="imgwrap"><picture><source srcset="assets/${g[0]}.webp" type="image/webp"><img src="assets/${g[0]}.jpg" alt="${esc(g[1])}" loading="${i===0?"eager":"lazy"}" onclick="openLightbox(${i})"></picture><span class="sheen"></span></div><figcaption><b>${esc(g[1])}</b><span class="zoomhint">눌러서 크게 보기</span></figcaption></figure>`}
 function openLightbox(i){const g=GUIDES[i],box=document.getElementById("lightbox"),img=document.getElementById("lbImg");
 document.getElementById("lbTitle").textContent=g[1];
 img.onerror=function(){img.onerror=null;img.src="assets/"+g[0]+".jpg"};
@@ -311,8 +338,8 @@ document.addEventListener("keydown",e=>{if(e.key==="Escape")closeLightbox()});
 function prev1(){try{return JSON.parse(localStorage.getItem(KEY)||"{}")||{}}catch(e){return{}}}
 function prevPicks(){const p=prev1();return (Array.isArray(p.ax_modules)?p.ax_modules:[]).concat(Array.isArray(p.must_have)?p.must_have:[])}
 function prevSummaryHTML(){const p=prev1();const rows=[["회사명",p.company],["업종",p.industry],["주요 사용자",p.roles],["이번 AX 목표",p.goals],["가장 큰 문제",p.biggest_pain],["1차 우선범위",p.must_have],["합격 기준",p.acceptance]].filter(x=>x[1]&&(!Array.isArray(x[1])||x[1].length));
-if(!rows.length)return `<div class="callout navy"><span class="ci">참고</span><div class="cb">이 기기에는 1차 체크리스트 응답이 저장되어 있지 않습니다. 1차를 작성하셨던 기기·브라우저에서 열면 여기에 <b>1차 답변 요약</b>이 함께 표시됩니다.</div></div>`;
-return `<div class="prevbox"><h4>1차에서 이렇게 답하셨습니다</h4><p class="prevlead">그때 정한 우선순위와 지금 화면이 얼마나 맞는지 비교하면서 작성해주세요.</p><div class="prevgrid">${rows.map(x=>`<div class="previtem"><b>${esc(x[0])}</b><span>${esc(Array.isArray(x[1])?x[1].join(", "):String(x[1]))}</span></div>`).join("")}</div></div>`}
+if(!rows.length)return `<div class="callout navy reveal"><span class="ci">참고</span><div class="cb">이 기기에는 1차 체크리스트 응답이 저장되어 있지 않습니다. 1차를 작성하셨던 기기·브라우저에서 열면 여기에 <b>1차 답변 요약</b>이 함께 표시됩니다.</div></div>`;
+return `<div class="prevbox reveal"><h4>1차에서 이렇게 답하셨습니다</h4><p class="prevlead">그때 정한 우선순위와 지금 화면이 얼마나 맞는지 비교하면서 작성해주세요.</p><div class="prevgrid">${rows.map(x=>`<div class="previtem"><b>${esc(x[0])}</b><span>${esc(Array.isArray(x[1])?x[1].join(", "):String(x[1]))}</span></div>`).join("")}</div></div>`}
 /* ===== 업종별 추천 표시 ===== */
 const PRESET={
 "제조":{goals:["반복업무/수기작업 줄이기","재고/원가/수익성 개선","대표가 현황을 한눈에 보기","직원 누락·실수 줄이기"],workflow_steps:["문의/리드","견적","주문/수주","발주/구매","생산/작업","검수/완료","배송/납품","결제/정산"],ax_modules:["대표 대시보드","주문/수주","재고/발주","원가/수익성","매출/정산","고객/거래처 관리"],ai_features:["수요/재고 예측","원가/수익성 분석","위험/이상 징후 알림","오늘의 운영 브리핑"],customer_features:["주문/구매","진행상황 확인","요청/문의","견적/상담 신청"]},
@@ -334,14 +361,14 @@ return ""}
 /* ===== 시작 전 안내 영역 ===== */
 function introHTML(){
 if(phase===2)return `<div class="guidewrap" id="guideTop" data-navtarget>
-<div class="guidehead"><span class="guidekicker">2차 고도화 체크리스트</span><h2>실제 화면을 보고, 우리 회사 기준으로 고칩니다</h2><p>1차 MVP를 1~2주 정도 직접 사용해보신 뒤 작성해주세요. 화면을 눈으로 보고 나면, 처음에는 떠오르지 않던 부분이 분명해집니다. 여기서 정리된 내용이 마지막 고도화의 우선순위가 됩니다.</p></div>
+<div class="guidehead reveal"><span class="guidekicker">2차 고도화 체크리스트</span><h2>실제 화면을 보고, 우리 회사 기준으로 고칩니다</h2><p>1차 MVP를 1~2주 정도 직접 사용해보신 뒤 작성해주세요. 화면을 눈으로 보고 나면, 처음에는 떠오르지 않던 부분이 분명해집니다. 여기서 정리된 내용이 마지막 고도화의 우선순위가 됩니다.</p></div>
 ${prevSummaryHTML()}
 ${guideCard(0)}
-<div class="callout navy"><span class="ci">참고</span><div class="cb">지금은 위 흐름의 <b>5단계</b>입니다. 아직 1차 MVP를 받아보지 않으셨다면 <b>[1차 사전 체크리스트]</b> 탭을 먼저 작성해주세요. 개발·운영 구조와 비용 안내도 1차 탭에서 확인하실 수 있습니다.</div></div></div>`;
+<div class="callout navy reveal"><span class="ci">참고</span><div class="cb">지금은 위 흐름의 <b>5단계</b>입니다. 아직 1차 MVP를 받아보지 않으셨다면 <b>[1차 사전 체크리스트]</b> 탭을 먼저 작성해주세요. 개발·운영 구조와 비용 안내도 1차 탭에서 확인하실 수 있습니다.</div></div></div>`;
 return `<div class="guidewrap" id="guideTop" data-navtarget>
-<div class="guidehead"><span class="guidekicker">시작 전에 꼭 읽어주세요</span><h2>AX 개발, 이렇게 진행됩니다</h2><p>개발을 전혀 모르셔도 괜찮습니다. 아래 3장만 보시면 전체 그림이 잡힙니다. 어떤 순서로 만드는지, 무엇과 무엇이 연결되는지, 비용은 언제 생기는지를 미리 안내드립니다.</p></div>
+<div class="guidehead reveal"><span class="guidekicker">시작 전에 꼭 읽어주세요</span><h2>AX 개발, 이렇게 진행됩니다</h2><p>개발을 전혀 모르셔도 괜찮습니다. 아래 3장만 보시면 전체 그림이 잡힙니다. 어떤 순서로 만드는지, 무엇과 무엇이 연결되는지, 비용은 언제 생기는지를 미리 안내드립니다.</p></div>
 ${guideCard(0)}${guideCard(1)}${guideCard(2)}
-<div class="callout gold"><span class="ci">한 줄 요약</span><div class="cb">빠르게 만들어 보여드리고, <b>의견을 반영해 우리 회사에 맞게 고쳐가는 방식</b>입니다. 모든 서비스는 초기 무료 플랜으로 시작할 수 있고, 사용량이 늘면 Vercel·Supabase·도메인·AI API 비용은 고객사 부담으로 전환될 수 있습니다.</div></div></div>`}
+<div class="callout gold reveal"><span class="ci">한 줄 요약</span><div class="cb">빠르게 만들어 보여드리고, <b>의견을 반영해 우리 회사에 맞게 고쳐가는 방식</b>입니다. 모든 서비스는 초기 무료 플랜으로 시작할 수 있고, 사용량이 늘면 Vercel·Supabase·도메인·AI API 비용은 고객사 부담으로 전환될 수 있습니다.</div></div></div>`}
 detectInApp();
 render();
 </script></body></html>
