@@ -40,6 +40,7 @@
 | `vercel.json` | Vercel 정적 배포 설정(캐시·보안 헤더) |
 | `favicon.png` | 브라우저 탭 아이콘(로고 M 마크) |
 | `robots.txt` | 검색엔진 수집 차단(고객 전용 링크용) |
+| `assets/config.js` | 미래AI랩 OS(Supabase) 연동 설정 |
 
 안내 이미지는 `.webp`(용량 작음)와 `.jpg`(구형 브라우저용)를 함께 두고 `<picture>`로 자동 선택합니다.
 **이미지를 교체할 때는 두 확장자를 같은 이름으로 함께 바꿔주세요.**
@@ -73,7 +74,57 @@ Vercel → **Settings → Domains** 에서 `ax.회사도메인.com` 같은 주�
 
 ---
 
-## 3. 결과 회수 방식 (중요)
+## 3. 미래AI랩 OS 연동 (제출하기)
+
+`AX-MVP-Factory-OS` 의 Supabase 로 응답을 바로 보낼 수 있습니다. OS에 이미 있는 공개 설문 배관을 그대로 씁니다.
+
+```
+OS에서 고객별 링크 발급 (survey_distributions · 토큰 생성)
+   ↓ https://체크리스트주소/?t=<토큰>&p=1   ← 카톡으로 이 링크 전달
+고객 작성 → [제출하기]
+   ↓ submit_public_survey_response(토큰, 답변, is_final=true)
+survey_responses 저장 + 배포 상태 submitted
+   ↓
+OS 진단 스튜디오에 "응답 제출 완료 · 분석 시작" 으로 표시
+```
+
+### 설정 (한 번만)
+
+`assets/config.js` 에 OS와 **같은** Supabase 값을 넣고 push 합니다.
+
+```js
+window.MIRAE_CONFIG = {
+  supabaseUrl: 'https://<프로젝트>.supabase.co',
+  supabaseAnonKey: '<anon public key>',
+};
+```
+
+- 두 값은 OS 저장소 `.env` 의 `VITE_SUPABASE_URL` / `VITE_SUPABASE_ANON_KEY` 와 동일합니다.
+- anon key 는 브라우저에 노출을 전제로 만든 공개 키입니다. 이 키로 가능한 동작은 **발급된 토큰이 가리키는 그 한 건에 응답 저장**뿐이고, 나머지는 Supabase RLS 가 막습니다.
+- `service_role` 키는 **절대** 넣지 마세요.
+- 값이 비어 있으면 제출 버튼이 아예 나타나지 않고 기존처럼 카톡/PDF 저장만 동작합니다.
+
+### 링크 만들기
+
+| 항목 | 값 |
+|---|---|
+| 1차 | `https://주소/?t=<1차토큰>&p=1` |
+| 2차 | `https://주소/?t=<2차토큰>&p=2` |
+
+- 토큰은 OS의 **설문 링크 발급**(`SurveyLinkCreateModal`)에서 만든 것을 씁니다. OS가 발급하는 주소 `/survey/<토큰>` 의 토큰 부분만 가져오면 됩니다.
+- `p` 는 그 토큰이 어느 단계용인지 고정합니다. 링크로 열린 단계에서만 제출 버튼이 보이므로, 1차 토큰으로 2차를 제출하는 사고가 나지 않습니다.
+- **1차와 2차는 각각 별도 토큰**이 필요합니다(배포 1건당 응답 1건).
+
+### 동작 규칙
+
+- 제출은 **고객이 버튼을 눌렀을 때만** 전송됩니다. 작성 중 내용이 서버로 새어 나가지 않습니다.
+- 수정 후 다시 제출하면 같은 응답을 최신 내용으로 갱신합니다(배포당 1건 upsert).
+- 전송 실패 시 성공으로 처리하지 않고, 카톡/PDF 저장으로 안내합니다.
+- 보내는 내용은 OS의 `SurveyResponse` 형식(`answers[]`, `respondentProfile`, `progressPercent` …)에 맞추고, 질문 라벨과 카톡용 요약문(`summaryText`)을 함께 담습니다.
+
+---
+
+## 4. 결과 회수 방식 (중요)
 
 이 페이지는 **서버로 답변을 전송하지 않습니다.** 응답은 고객 기기 안에만 저장됩니다.
 따라서 고객이 작성 완료 후 아래 중 하나로 결과를 보내주셔야 합니다.
@@ -89,7 +140,7 @@ Vercel → **Settings → Domains** 에서 `ax.회사도메인.com` 같은 주�
 
 ---
 
-## 4. 내용 수정 방법
+## 5. 내용 수정 방법
 
 질문·선택지·안내문구는 모두 `index.html` 하단 `<script>` 안의 데이터 배열에 있습니다.
 
@@ -119,7 +170,7 @@ Vercel → **Settings → Domains** 에서 `ax.회사도메인.com` 같은 주�
 
 ---
 
-## 5. 검색엔진 노출
+## 6. 검색엔진 노출
 
 고객 전용 링크라서 기본값은 **검색 노출 차단**입니다.
 공개하고 싶다면 두 곳을 함께 수정하세요.
@@ -133,7 +184,7 @@ Vercel → **Settings → Domains** 에서 `ax.회사도메인.com` 같은 주�
 
 ---
 
-## 6. 로컬에서 확인하기
+## 7. 로컬에서 확인하기
 
 ```bash
 npx http-server -p 8080 .
