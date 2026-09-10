@@ -99,8 +99,10 @@ window.MIRAE_CONFIG = {
 };
 ```
 
-- 두 값은 OS 저장소 `.env` 의 `VITE_SUPABASE_URL` / `VITE_SUPABASE_ANON_KEY` 와 동일합니다.
-- anon key 는 브라우저에 노출을 전제로 만든 공개 키입니다. 이 키로 가능한 동작은 **발급된 토큰이 가리키는 그 한 건에 응답 저장**뿐이고, 나머지는 Supabase RLS 가 막습니다.
+- **Project URL**: Supabase → Settings → **Data API** 의 Project URL. 대시보드 주소 `.../project/<프로젝트ref>/...` 의 ref 로 `https://<ref>.supabase.co` 형태입니다.
+- **키**: Supabase → Settings → **API Keys**. 새 형식 `sb_publishable_...` 과 구형 `anon`(`eyJhbGci...`) 둘 다 됩니다.
+  - 새 publishable 키는 `apikey` 헤더로만 보내야 하므로, 키 형식을 보고 헤더를 자동으로 맞춥니다.
+- 이 키는 브라우저에 노출을 전제로 만든 공개 키입니다. 이 키로 가능한 동작은 **발급된 토큰이 가리키는 그 한 건에 응답 저장**뿐이고, 나머지는 Supabase RLS 가 막습니다.
 - `service_role` 키는 **절대** 넣지 마세요.
 - 값이 비어 있으면 제출 버튼이 아예 나타나지 않고 기존처럼 카톡/PDF 저장만 동작합니다.
 

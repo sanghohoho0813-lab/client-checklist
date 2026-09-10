@@ -345,6 +345,11 @@ function detectInApp(){const ua=navigator.userAgent||"";const kakao=/KAKAOTALK/i
 const OSCFG=(window.MIRAE_CONFIG||{});
 const OSTOKEN=(function(){try{return (new URLSearchParams(location.search).get("t")||"").trim()}catch(e){return ""}})();
 let OSPHASE=0;
+function osHeaders(){const k=String(OSCFG.supabaseAnonKey||"");const h={"Content-Type":"application/json",apikey:k};
+/* 구형 anon 키는 JWT라 Authorization 헤더도 함께 보내고,
+   새 publishable 키(sb_publishable_…)는 JWT가 아니므로 apikey 헤더로만 보낸다. */
+if(/^ey[A-Za-z0-9_-]/.test(k))h.Authorization="Bearer "+k;
+return h}
 function osReady(){return !!(OSTOKEN&&OSCFG.supabaseUrl&&OSCFG.supabaseAnonKey&&/^https:\/\//.test(String(OSCFG.supabaseUrl)))}
 function osActive(){return osReady()&&phase===OSPHASE}
 function osPayload(){const sp=spec(),now=new Date().toISOString(),labels={},ans=[];
@@ -374,7 +379,7 @@ const btn=document.getElementById("osBtn");if(btn){btn.disabled=true;btn.textCon
 ensureStarted();save();
 let ok=false,msg="";
 try{const res=await fetch(String(OSCFG.supabaseUrl).replace(/\/+$/,"")+"/rest/v1/rpc/submit_public_survey_response",
-{method:"POST",headers:{"Content-Type":"application/json",apikey:OSCFG.supabaseAnonKey,Authorization:"Bearer "+OSCFG.supabaseAnonKey},
+{method:"POST",headers:osHeaders(),
 body:JSON.stringify({survey_token:OSTOKEN,response_payload:osPayload(),is_final:true})});
 if(!res.ok){msg=await res.text().catch(()=>"");throw new Error(msg||("HTTP "+res.status))}
 ok=true}catch(e){msg=(e&&e.message)?String(e.message):""}
