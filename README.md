@@ -122,6 +122,47 @@ window.MIRAE_CONFIG = {
 - 전송 실패 시 성공으로 처리하지 않고, 카톡/PDF 저장으로 안내합니다.
 - 보내는 내용은 OS의 `SurveyResponse` 형식(`answers[]`, `respondentProfile`, `progressPercent` …)에 맞추고, 질문 라벨과 카톡용 요약문(`summaryText`)을 함께 담습니다.
 
+### 응답 상세 화면 예쁘게 보기 (블루프린트 등록)
+
+블루프린트를 등록해두면 OS의 **응답 상세** 화면이 문항별로 제대로 렌더됩니다
+(문항 코드·분류 배지·필수 여부·선택지 라벨·응답 시각).
+
+| 파일 | 설명 |
+|---|---|
+| `os-integration/install.sql` | Supabase SQL Editor 에 붙여넣어 실행 (블루프린트 등록 + 링크 발급 함수) |
+| `os-integration/blueprint.json` | 등록되는 문항 구조 (확인용) |
+| `os-integration/build-blueprint.mjs` | 체크리스트 문항 → 블루프린트 변환기 |
+
+**설치 (한 번만)**
+
+1. `select id, name from public.workspaces;` 로 워크스페이스 id 확인
+2. `os-integration/install.sql` 을 열어 맨 위 `v_workspace` 값을 그 id 로 교체
+3. Supabase → SQL Editor → 붙여넣고 Run
+
+여러 번 실행해도 안전합니다(같은 블루프린트를 갱신).
+
+**링크 발급**
+
+```sql
+select public.issue_checklist_link(
+  '<workspace_id>'::uuid,
+  '<project_id>'::uuid,        -- 필수. 비우면 어느 업체 것인지 묶이지 않아 막아둠
+  1,                            -- 1차 = 1, 2차 = 2
+  '홍길동', '대표이사',
+  'https://<체크리스트주소>'
+);
+```
+
+반환된 `url` 을 고객에게 보내면 됩니다. **토큰은 해시로만 저장되므로 이 때 나온 url 을 꼭 보관하세요**(다시 볼 수 없습니다).
+
+**문항을 고쳤을 때**
+
+```bash
+node os-integration/build-blueprint.mjs   # blueprint.json + install.sql 재생성
+```
+그다음 `install.sql` 을 다시 실행하면 블루프린트가 최신 문항으로 갱신됩니다.
+(이미 발급된 링크는 발급 시점 스냅샷을 쓰므로 영향받지 않습니다.)
+
 ---
 
 ## 4. 결과 회수 방식 (중요)
