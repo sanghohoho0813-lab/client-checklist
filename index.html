@@ -345,12 +345,14 @@ function detectInApp(){const ua=navigator.userAgent||"";const kakao=/KAKAOTALK/i
 const OSCFG=(window.MIRAE_CONFIG||{});
 const OSTOKEN=(function(){try{return (new URLSearchParams(location.search).get("t")||"").trim()}catch(e){return ""}})();
 let OSPHASE=0;
+function osBase(){/* 대시보드에서 /rest/v1 까지 복사해 넣는 경우가 잦아 함께 정리한다 */
+return String(OSCFG.supabaseUrl||"").trim().replace(/\/+$/,"").replace(/\/rest\/v1$/,"")}
 function osHeaders(){const k=String(OSCFG.supabaseAnonKey||"");const h={"Content-Type":"application/json",apikey:k};
 /* 구형 anon 키는 JWT라 Authorization 헤더도 함께 보내고,
    새 publishable 키(sb_publishable_…)는 JWT가 아니므로 apikey 헤더로만 보낸다. */
 if(/^ey[A-Za-z0-9_-]/.test(k))h.Authorization="Bearer "+k;
 return h}
-function osReady(){return !!(OSTOKEN&&OSCFG.supabaseUrl&&OSCFG.supabaseAnonKey&&/^https:\/\//.test(String(OSCFG.supabaseUrl)))}
+function osReady(){const u=osBase();return !!(OSTOKEN&&u&&String(OSCFG.supabaseAnonKey||"").trim()&&/^https:\/\/[^/\s]+$/.test(u))}
 function osActive(){return osReady()&&phase===OSPHASE}
 function osPayload(){const sp=spec(),now=new Date().toISOString(),labels={},ans=[];
 sp.core.concat(sp.optional).forEach(sec=>sec[4].forEach(q=>{const t=q[0],k=q[1];labels[k]=q[2];
@@ -378,7 +380,7 @@ if(!rows().length){alert("아직 작성된 답변이 없습니다. 항목을 먼
 const btn=document.getElementById("osBtn");if(btn){btn.disabled=true;btn.textContent="전송 중입니다…"}
 ensureStarted();save();
 let ok=false,msg="";
-try{const res=await fetch(String(OSCFG.supabaseUrl).replace(/\/+$/,"")+"/rest/v1/rpc/submit_public_survey_response",
+try{const res=await fetch(osBase()+"/rest/v1/rpc/submit_public_survey_response",
 {method:"POST",headers:osHeaders(),
 body:JSON.stringify({survey_token:OSTOKEN,response_payload:osPayload(),is_final:true})});
 if(!res.ok){msg=await res.text().catch(()=>"");throw new Error(msg||("HTTP "+res.status))}
