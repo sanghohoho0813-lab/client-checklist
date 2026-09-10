@@ -179,43 +179,58 @@ const sql = `-- ================================================================
 -- 생성: os-integration/build-blueprint.mjs (직접 고치지 말고 스크립트를 다시 실행하세요)
 -- ---------------------------------------------------------------------
 -- 실행 방법
---   1) Supabase 대시보드 → SQL Editor → New query
---   2) 이 파일 전체를 붙여넣기
---   3) 아래 v_workspace 값을 본인 워크스페이스 id 로 바꾸기
---   4) Run
+--   Supabase 대시보드 → SQL Editor → New query → 이 파일 전체 붙여넣기 → Run
+--   그게 전부입니다. 파일을 고칠 필요 없습니다.
 --
--- 워크스페이스 id 확인:  select id, name from public.workspaces;
+--   워크스페이스는 자동으로 찾습니다.
+--   워크스페이스가 2개 이상이면 오류 메시지에 목록이 나오니,
+--   그때만 아래 v_workspace 줄의 null 을 원하는 id 로 바꿔서 다시 실행하세요.
 -- =====================================================================
 
 do $$
 declare
-  v_workspace uuid := '00000000-0000-0000-0000-000000000000'; -- ★ 여기를 바꾸세요
+  -- 워크스페이스가 하나면 비워두세요(자동). 여러 개일 때만 id 를 적습니다.
+  v_workspace uuid := null;
+  v_count integer;
+  v_list text;
 begin
-  if not exists (select 1 from public.workspaces where id = v_workspace) then
-    raise exception '워크스페이스를 찾을 수 없습니다. select id, name from public.workspaces; 로 확인한 id 를 넣어주세요.';
+  if v_workspace is null then
+    select count(*) into v_count from public.workspaces;
+    if v_count = 0 then
+      raise exception '워크스페이스가 하나도 없습니다. OS 에서 워크스페이스를 먼저 만들어주세요.';
+    elsif v_count > 1 then
+      select string_agg(format('%s → %s', id, coalesce(name, '(이름없음)')), chr(10)) into v_list from public.workspaces;
+      raise exception '워크스페이스가 % 개입니다. 아래에서 하나를 골라 이 스크립트 위쪽 v_workspace 줄에 넣고 다시 실행하세요.%', v_count, chr(10) || v_list;
+    end if;
+    select id into v_workspace from public.workspaces limit 1;
+  elsif not exists (select 1 from public.workspaces where id = v_workspace) then
+    raise exception '그 워크스페이스를 찾을 수 없습니다: %', v_workspace;
   end if;
+  raise notice '워크스페이스: %', v_workspace;
 ${rows.split('\n').map((l) => (l ? '  ' + l : l)).join('\n')}
 end $$;
 
 -- ---------------------------------------------------------------------
 -- 체크리스트 링크 발급 함수
---   사용 예)
+--   먼저 프로젝트 id 를 확인합니다.
+--     select id, payload->>'name' as 프로젝트명 from public.projects;
+--
+--   그 id 를 넣어 링크를 만듭니다.
 --     select public.issue_checklist_link(
---       '<workspace_id>'::uuid,   -- 워크스페이스
---       '<project_id>'::uuid,     -- 프로젝트 (필수)
---       1,                        -- 1차 = 1, 2차 = 2
---       '홍길동',                  -- 받는 분 성함
---       '대표이사',                -- 직책
---       'https://<체크리스트주소>'  -- 배포 주소
+--       '<프로젝트 id>'::uuid,      -- 위에서 복사한 id
+--       1,                         -- 1차 = 1, 2차 = 2
+--       '홍길동',                   -- 받는 분 성함
+--       '대표이사',                 -- 직책
+--       'https://<체크리스트주소>'   -- 배포 주소
 --     );
 --   반환된 url 을 고객에게 그대로 보내면 됩니다.
 --   토큰은 해시로만 저장되므로 이 때 나온 url 을 꼭 보관하세요.
 -- ---------------------------------------------------------------------
 -- 인자 기본값이 바뀌면 create or replace 가 거부하므로 먼저 지운다.
 drop function if exists public.issue_checklist_link(uuid, uuid, integer, text, text, text);
+drop function if exists public.issue_checklist_link(uuid, integer, text, text, text);
 
 create or replace function public.issue_checklist_link(
-  p_workspace_id uuid,
   p_project_id uuid,
   p_phase integer default 1,
   p_recipient_name text default '',
@@ -230,7 +245,14 @@ declare
   bp public.survey_blueprints;
   tok text;
   dist_id uuid := gen_random_uuid();
+  p_workspace_id uuid;
 begin
+  -- 프로젝트에서 워크스페이스를 자동으로 찾는다.
+  select workspace_id into p_workspace_id from public.projects where id = p_project_id;
+  if p_workspace_id is null then
+    raise exception '그런 프로젝트가 없습니다. 아래로 확인하세요: select id, payload->>''name'' from public.projects;';
+  end if;
+
   select * into bp
   from public.survey_blueprints
   where workspace_id = p_workspace_id
@@ -241,14 +263,6 @@ begin
 
   if bp.id is null then
     raise exception '체크리스트 블루프린트가 없습니다. 이 파일 위쪽의 등록 블록을 먼저 실행하세요. (phase=%)', p_phase;
-  end if;
-
-  -- 프로젝트를 비워두면 OS 진단 스튜디오에서 어느 업체 것인지 묶이지 않는다.
-  if p_project_id is null then
-    raise exception '프로젝트를 지정해주세요. 다음 조회로 project_id 를 확인할 수 있습니다: select id, project_code, payload->>''name'' from public.projects where workspace_id = ''%'';', p_workspace_id;
-  end if;
-  if not exists (select 1 from public.projects where id = p_project_id and workspace_id = p_workspace_id) then
-    raise exception '이 워크스페이스에 없는 프로젝트입니다. (project_id=%)', p_project_id;
   end if;
 
   -- URL 에 안전한 토큰 생성. 원문은 저장하지 않고 해시만 저장한다.
@@ -295,8 +309,8 @@ $fn$;
 
 -- 권한: 링크 발급은 로그인한 담당자만. 고객(anon)에게는 절대 열지 않는다.
 -- (저장소의 다른 RPC 와 같은 방식)
-revoke execute on function public.issue_checklist_link(uuid, uuid, integer, text, text, text) from public;
-grant  execute on function public.issue_checklist_link(uuid, uuid, integer, text, text, text) to authenticated;
+revoke execute on function public.issue_checklist_link(uuid, integer, text, text, text) from public;
+grant  execute on function public.issue_checklist_link(uuid, integer, text, text, text) to authenticated;
 `
 writeFileSync(path.join(ROOT, 'os-integration/install.sql'), sql)
 
