@@ -16,6 +16,6 @@
  * 기존처럼 카톡용 저장 / PDF 저장만 동작합니다.
  * ===================================================================== */
 window.MIRAE_CONFIG = {
-  supabaseUrl: '',
-  supabaseAnonKey: '',
+  supabaseUrl: 'https://uefsdtlcybemoyoxncyn.supabase.co',
+  supabaseAnonKey: 'sb_publishable_6-6Ft4beEDK01JeXlPVTGA_PboVEMaU',
 };
