@@ -145,3 +145,8 @@ begin
   );
 end;
 $fn$;
+
+-- 권한: 링크 발급은 로그인한 담당자만. 고객(anon)에게는 절대 열지 않는다.
+-- (저장소의 다른 RPC 와 같은 방식)
+revoke execute on function public.issue_checklist_link(uuid, uuid, integer, text, text, text) from public;
+grant  execute on function public.issue_checklist_link(uuid, uuid, integer, text, text, text) to authenticated;
