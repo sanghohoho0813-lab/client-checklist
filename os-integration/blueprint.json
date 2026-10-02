@@ -54,7 +54,7 @@
             "questionCode": "industry",
             "questionText": "업종에 가장 가까운 항목",
             "helpText": "업종마다 중요한 업무가 다릅니다. · 업종에 맞는 메뉴와 AI 기능의 기본틀을 정합니다.",
-            "example": "제조는 생산·재고, 학원은 상담·재등록이 중요합니다.",
+            "example": "미용실·피부관리·병원·상담·숙박처럼 예약이 중요한 곳은 '서비스', 학원은 '교육'을 골라주세요.",
             "type": "single_choice",
             "category": "company",
             "scope": "custom",
@@ -1746,10 +1746,465 @@
       },
       {
         "id": "sec_08",
-        "title": "08 · 제공 가능한 자료",
-        "description": "실제 회사처럼 만들기 위해 받을 수 있는 자료를 확인합니다.",
+        "title": "08 · 지금 쓰는 프로그램과 자료",
+        "description": "쓰고 계신 프로그램은 그대로 두고, 필요한 정보만 AX와 이어 쓸 수 있는지 확인합니다.",
         "orderIndex": 7,
         "placements": [
+          {
+            "id": "ext_tools__p",
+            "questionId": "ext_tools",
+            "questionCode": "ext_tools",
+            "questionText": "지금 업무에 쓰고 있는 프로그램이나 서비스가 있나요? (여러 개 선택)",
+            "helpText": "프로그램마다 연결 방법이 달라서, 지금 쓰시는 환경을 먼저 확인합니다. · 그대로 살릴 것, 연결할 것, AX에서 새로 만들 것을 나누는 기준이 됩니다.",
+            "example": "예약은 네이버 예약, 계산은 POS, 장부는 엑셀로 하고 계시면 셋 다 골라주세요.",
+            "type": "multiple_choice",
+            "category": "systems",
+            "scope": "custom",
+            "scoringDomain": "none",
+            "expertRiskGrade": "green",
+            "options": [
+              {
+                "id": "ext_tools__o0",
+                "label": "네이버 예약",
+                "value": "네이버 예약",
+                "score": 0,
+                "riskSignal": "none",
+                "orderIndex": 0
+              },
+              {
+                "id": "ext_tools__o1",
+                "label": "네이버 스마트플레이스",
+                "value": "네이버 스마트플레이스",
+                "score": 0,
+                "riskSignal": "none",
+                "orderIndex": 1
+              },
+              {
+                "id": "ext_tools__o2",
+                "label": "카카오 예약 / 카카오톡 채널",
+                "value": "카카오 예약 / 카카오톡 채널",
+                "score": 0,
+                "riskSignal": "none",
+                "orderIndex": 2
+              },
+              {
+                "id": "ext_tools__o3",
+                "label": "자체 예약 프로그램",
+                "value": "자체 예약 프로그램",
+                "score": 0,
+                "riskSignal": "none",
+                "orderIndex": 3
+              },
+              {
+                "id": "ext_tools__o4",
+                "label": "POS (매장 계산 프로그램)",
+                "value": "POS (매장 계산 프로그램)",
+                "score": 0,
+                "riskSignal": "none",
+                "orderIndex": 4
+              },
+              {
+                "id": "ext_tools__o5",
+                "label": "쇼핑몰 (자사몰·스마트스토어 등)",
+                "value": "쇼핑몰 (자사몰·스마트스토어 등)",
+                "score": 0,
+                "riskSignal": "none",
+                "orderIndex": 5
+              },
+              {
+                "id": "ext_tools__o6",
+                "label": "배달·주문 플랫폼 (배민·쿠팡이츠 등)",
+                "value": "배달·주문 플랫폼 (배민·쿠팡이츠 등)",
+                "score": 0,
+                "riskSignal": "none",
+                "orderIndex": 6
+              },
+              {
+                "id": "ext_tools__o7",
+                "label": "고객관리 프로그램 (CRM)",
+                "value": "고객관리 프로그램 (CRM)",
+                "score": 0,
+                "riskSignal": "none",
+                "orderIndex": 7
+              },
+              {
+                "id": "ext_tools__o8",
+                "label": "그룹웨어·업무관리 프로그램",
+                "value": "그룹웨어·업무관리 프로그램",
+                "score": 0,
+                "riskSignal": "none",
+                "orderIndex": 8
+              },
+              {
+                "id": "ext_tools__o9",
+                "label": "ERP·재고관리 프로그램",
+                "value": "ERP·재고관리 프로그램",
+                "score": 0,
+                "riskSignal": "none",
+                "orderIndex": 9
+              },
+              {
+                "id": "ext_tools__o10",
+                "label": "회계·세무 프로그램",
+                "value": "회계·세무 프로그램",
+                "score": 0,
+                "riskSignal": "none",
+                "orderIndex": 10
+              },
+              {
+                "id": "ext_tools__o11",
+                "label": "구글 시트 / 엑셀",
+                "value": "구글 시트 / 엑셀",
+                "score": 0,
+                "riskSignal": "none",
+                "orderIndex": 11
+              },
+              {
+                "id": "ext_tools__o12",
+                "label": "기타 외부 프로그램",
+                "value": "기타 외부 프로그램",
+                "score": 0,
+                "riskSignal": "none",
+                "orderIndex": 12
+              },
+              {
+                "id": "ext_tools__o13",
+                "label": "특별히 쓰는 프로그램 없음",
+                "value": "특별히 쓰는 프로그램 없음",
+                "score": 0,
+                "riskSignal": "none",
+                "orderIndex": 13
+              }
+            ],
+            "repeatTableColumns": [],
+            "required": true,
+            "condition": null,
+            "sourceScope": "custom",
+            "orderIndex": 0
+          },
+          {
+            "id": "ext_tool_names__p",
+            "questionId": "ext_tool_names",
+            "questionCode": "ext_tool_names",
+            "questionText": "쓰고 계신 프로그램 이름을 아시면 적어주세요",
+            "helpText": "같은 POS라도 회사마다 연결 방법이 달라서, 이름을 알면 훨씬 정확하게 확인할 수 있어요. · 어떤 방식으로 연결할 수 있는지 미리 알아보는 데 씁니다. (프로그램을 쓰는 경우에만 답하는 문항)",
+            "example": "네이버 예약 / 이지포스 / 세무사랑 / 카페24 / 자체 프로그램",
+            "type": "long_text",
+            "category": "systems",
+            "scope": "custom",
+            "scoringDomain": "none",
+            "expertRiskGrade": "green",
+            "options": [],
+            "repeatTableColumns": [],
+            "required": false,
+            "condition": null,
+            "sourceScope": "custom",
+            "orderIndex": 1
+          },
+          {
+            "id": "ext_data__p",
+            "questionId": "ext_data",
+            "questionCode": "ext_data",
+            "questionText": "그 프로그램에 있는 정보 중 AX에서도 함께 보고 싶은 것이 있나요? (여러 개 선택)",
+            "helpText": "어떤 기술을 쓸지가 아니라, 지금 어디에 있는 어떤 정보를 AX에서도 보고 싶은지 여쭤보는 거예요. · AX 화면에 어떤 정보를 가져올지 정합니다. (프로그램을 쓰는 경우에만 답하는 문항)",
+            "example": "네이버 예약의 예약 내역과 POS의 매출을 AX 화면에서 한 번에 보기",
+            "type": "multiple_choice",
+            "category": "systems",
+            "scope": "custom",
+            "scoringDomain": "none",
+            "expertRiskGrade": "green",
+            "options": [
+              {
+                "id": "ext_data__o0",
+                "label": "예약정보",
+                "value": "예약정보",
+                "score": 0,
+                "riskSignal": "none",
+                "orderIndex": 0
+              },
+              {
+                "id": "ext_data__o1",
+                "label": "고객정보",
+                "value": "고객정보",
+                "score": 0,
+                "riskSignal": "none",
+                "orderIndex": 1
+              },
+              {
+                "id": "ext_data__o2",
+                "label": "상담기록",
+                "value": "상담기록",
+                "score": 0,
+                "riskSignal": "none",
+                "orderIndex": 2
+              },
+              {
+                "id": "ext_data__o3",
+                "label": "방문·이용이력",
+                "value": "방문·이용이력",
+                "score": 0,
+                "riskSignal": "none",
+                "orderIndex": 3
+              },
+              {
+                "id": "ext_data__o4",
+                "label": "일정",
+                "value": "일정",
+                "score": 0,
+                "riskSignal": "none",
+                "orderIndex": 4
+              },
+              {
+                "id": "ext_data__o5",
+                "label": "주문정보",
+                "value": "주문정보",
+                "score": 0,
+                "riskSignal": "none",
+                "orderIndex": 5
+              },
+              {
+                "id": "ext_data__o6",
+                "label": "결제정보",
+                "value": "결제정보",
+                "score": 0,
+                "riskSignal": "none",
+                "orderIndex": 6
+              },
+              {
+                "id": "ext_data__o7",
+                "label": "매출정보",
+                "value": "매출정보",
+                "score": 0,
+                "riskSignal": "none",
+                "orderIndex": 7
+              },
+              {
+                "id": "ext_data__o8",
+                "label": "상품·서비스 정보",
+                "value": "상품·서비스 정보",
+                "score": 0,
+                "riskSignal": "none",
+                "orderIndex": 8
+              },
+              {
+                "id": "ext_data__o9",
+                "label": "재고정보",
+                "value": "재고정보",
+                "score": 0,
+                "riskSignal": "none",
+                "orderIndex": 9
+              },
+              {
+                "id": "ext_data__o10",
+                "label": "배송·처리상태",
+                "value": "배송·처리상태",
+                "score": 0,
+                "riskSignal": "none",
+                "orderIndex": 10
+              },
+              {
+                "id": "ext_data__o11",
+                "label": "직원·담당자 정보",
+                "value": "직원·담당자 정보",
+                "score": 0,
+                "riskSignal": "none",
+                "orderIndex": 11
+              },
+              {
+                "id": "ext_data__o12",
+                "label": "기타",
+                "value": "기타",
+                "score": 0,
+                "riskSignal": "none",
+                "orderIndex": 12
+              },
+              {
+                "id": "ext_data__o13",
+                "label": "잘 모르겠음",
+                "value": "잘 모르겠음",
+                "score": 0,
+                "riskSignal": "none",
+                "orderIndex": 13
+              }
+            ],
+            "repeatTableColumns": [],
+            "required": false,
+            "condition": null,
+            "sourceScope": "custom",
+            "orderIndex": 2
+          },
+          {
+            "id": "ext_flow__p",
+            "questionId": "ext_flow",
+            "questionCode": "ext_flow",
+            "questionText": "지금은 그 정보를 다른 곳으로 어떻게 옮기고 계세요?",
+            "helpText": "지금 정보가 어떻게 오가는지 알면, 사람 손이 가장 많이 가는 곳부터 줄일 수 있어요. · 손으로 옮기는 일을 줄이는 순서를 정합니다. (프로그램을 쓰는 경우에만 답하는 문항)",
+            "example": "예약 프로그램을 보고 엑셀에 다시 옮겨 적는 경우 → '사람이 직접 다시 입력함'",
+            "type": "single_choice",
+            "category": "systems",
+            "scope": "custom",
+            "scoringDomain": "none",
+            "expertRiskGrade": "green",
+            "options": [
+              {
+                "id": "ext_flow__o0",
+                "label": "이미 다른 프로그램과 자동으로 연결해서 씀",
+                "value": "이미 다른 프로그램과 자동으로 연결해서 씀",
+                "score": 0,
+                "riskSignal": "none",
+                "orderIndex": 0
+              },
+              {
+                "id": "ext_flow__o1",
+                "label": "엑셀·파일로 내려받아 옮겨 씀",
+                "value": "엑셀·파일로 내려받아 옮겨 씀",
+                "score": 0,
+                "riskSignal": "none",
+                "orderIndex": 1
+              },
+              {
+                "id": "ext_flow__o2",
+                "label": "사람이 직접 다시 입력함",
+                "value": "사람이 직접 다시 입력함",
+                "score": 0,
+                "riskSignal": "none",
+                "orderIndex": 2
+              },
+              {
+                "id": "ext_flow__o3",
+                "label": "연결 없이 각각 따로 씀",
+                "value": "연결 없이 각각 따로 씀",
+                "score": 0,
+                "riskSignal": "none",
+                "orderIndex": 3
+              },
+              {
+                "id": "ext_flow__o4",
+                "label": "잘 모르겠음",
+                "value": "잘 모르겠음",
+                "score": 0,
+                "riskSignal": "none",
+                "orderIndex": 4
+              }
+            ],
+            "repeatTableColumns": [],
+            "required": false,
+            "condition": null,
+            "sourceScope": "custom",
+            "orderIndex": 3
+          },
+          {
+            "id": "ext_export__p",
+            "questionId": "ext_export",
+            "questionCode": "ext_export",
+            "questionText": "그 프로그램에서 정보를 꺼내거나 다른 프로그램과 연결할 수 있는지 아시나요?",
+            "helpText": "API(서로 다른 프로그램끼리 정보를 자동으로 주고받게 하는 연결 통로)나 엑셀 내려받기가 되는지에 따라 연결 방법이 달라져요. · 연결 방법을 정합니다. 같은 프로그램이라도 업종·계약에 따라 가능 여부가 달라서, 모르시면 '잘 모르겠음'을 고르시면 저희가 확인합니다. (프로그램을 쓰는 경우에만 답하는 문항)",
+            "example": "관리자 화면에 '엑셀 다운로드' 버튼이 있으면 '엑셀·CSV로 내려받을 수 있음'을 골라주세요. CSV는 엑셀로 열리는 표 파일입니다.",
+            "type": "single_choice",
+            "category": "systems",
+            "scope": "custom",
+            "scoringDomain": "none",
+            "expertRiskGrade": "green",
+            "options": [
+              {
+                "id": "ext_export__o0",
+                "label": "API 또는 외부 연동 기능이 있음",
+                "value": "API 또는 외부 연동 기능이 있음",
+                "score": 0,
+                "riskSignal": "none",
+                "orderIndex": 0
+              },
+              {
+                "id": "ext_export__o1",
+                "label": "엑셀·CSV로 내려받을 수 있음",
+                "value": "엑셀·CSV로 내려받을 수 있음",
+                "score": 0,
+                "riskSignal": "none",
+                "orderIndex": 1
+              },
+              {
+                "id": "ext_export__o2",
+                "label": "관리자 화면에서 보기만 가능",
+                "value": "관리자 화면에서 보기만 가능",
+                "score": 0,
+                "riskSignal": "none",
+                "orderIndex": 2
+              },
+              {
+                "id": "ext_export__o3",
+                "label": "프로그램 업체에 물어봐야 함",
+                "value": "프로그램 업체에 물어봐야 함",
+                "score": 0,
+                "riskSignal": "none",
+                "orderIndex": 3
+              },
+              {
+                "id": "ext_export__o4",
+                "label": "잘 모르겠음",
+                "value": "잘 모르겠음",
+                "score": 0,
+                "riskSignal": "none",
+                "orderIndex": 4
+              }
+            ],
+            "repeatTableColumns": [],
+            "required": false,
+            "condition": null,
+            "sourceScope": "custom",
+            "orderIndex": 4
+          },
+          {
+            "id": "ext_keep__p",
+            "questionId": "ext_keep",
+            "questionCode": "ext_keep",
+            "questionText": "지금 쓰는 프로그램은 앞으로도 계속 쓰실 생각인가요?",
+            "helpText": "계속 쓰실 프로그램이면 그대로 두고 AX와 연결하고, 바꾸고 싶으시면 AX 안에서 새로 만드는 쪽으로 검토합니다. · 기존 프로그램을 살릴지, AX에서 새로 만들지 정하는 기준이 됩니다. (프로그램을 쓰는 경우에만 답하는 문항)",
+            "example": "예약은 네이버 예약을 계속 쓰고, 고객관리만 AX로 옮기고 싶은 경우 → '계속 사용할 예정'",
+            "type": "single_choice",
+            "category": "systems",
+            "scope": "custom",
+            "scoringDomain": "none",
+            "expertRiskGrade": "green",
+            "options": [
+              {
+                "id": "ext_keep__o0",
+                "label": "계속 사용할 예정",
+                "value": "계속 사용할 예정",
+                "score": 0,
+                "riskSignal": "none",
+                "orderIndex": 0
+              },
+              {
+                "id": "ext_keep__o1",
+                "label": "더 나은 방법이 있으면 바꿀 수 있음",
+                "value": "더 나은 방법이 있으면 바꿀 수 있음",
+                "score": 0,
+                "riskSignal": "none",
+                "orderIndex": 1
+              },
+              {
+                "id": "ext_keep__o2",
+                "label": "바꾸고 싶음 (지금 불편함)",
+                "value": "바꾸고 싶음 (지금 불편함)",
+                "score": 0,
+                "riskSignal": "none",
+                "orderIndex": 2
+              },
+              {
+                "id": "ext_keep__o3",
+                "label": "잘 모르겠음",
+                "value": "잘 모르겠음",
+                "score": 0,
+                "riskSignal": "none",
+                "orderIndex": 3
+              }
+            ],
+            "repeatTableColumns": [],
+            "required": false,
+            "condition": null,
+            "sourceScope": "custom",
+            "orderIndex": 5
+          },
           {
             "id": "materials__p",
             "questionId": "materials",
@@ -1880,7 +2335,7 @@
             "required": true,
             "condition": null,
             "sourceScope": "custom",
-            "orderIndex": 0
+            "orderIndex": 6
           }
         ]
       },
@@ -2003,7 +2458,7 @@
       {
         "id": "sec_A",
         "title": "A · 현재 도구·데이터 상태",
-        "description": "이미 기본 설계에 반영되는 내용입니다. 더 정확히 맞추고 싶을 때만 작성해주세요.",
+        "description": "08번에서 고른 프로그램 말고도 함께 쓰는 도구나 보유 데이터를 더 알려주실 때만 작성해주세요.",
         "orderIndex": 0,
         "placements": [
           {
@@ -2011,8 +2466,8 @@
             "questionId": "tools",
             "questionCode": "tools",
             "questionText": "현재 사용하는 관리수단",
-            "helpText": "지금 쓰는 도구를 알면 더 정확히 맞출 수 있습니다. · 무엇을 대체하고 무엇을 연결할지 참고합니다.",
-            "example": "엑셀 + 카톡 + POS 등",
+            "helpText": "08번에서 고른 프로그램 말고도 카톡 단톡방·수기장부처럼 함께 쓰는 도구가 있으면 알려주세요. · 무엇을 대체하고 무엇을 연결할지 참고합니다.",
+            "example": "엑셀 + 카톡 + 수기장부",
             "type": "multiple_choice",
             "category": "systems",
             "scope": "custom",
@@ -2686,7 +3141,7 @@
         ]
       }
     ],
-    "questionCount": 34,
+    "questionCount": 40,
     "estimatedMinutes": 15,
     "source": "client-checklist"
   },

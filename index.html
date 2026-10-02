@@ -161,6 +161,8 @@
 .lb-hint{font-size:11.5px;padding:7px 10px 9px}
 @media(max-width:430px){.lb-title{display:none}.lb-bar{justify-content:flex-end}}
 }
+.qlabel .tag{margin-left:8px;vertical-align:3px;font-size:11px}
+.previtem span{white-space:pre-line}
 </style></head><body>
 <div class="shell"><div class="brandbar"><picture><source srcset="assets/logo.webp" type="image/webp"><img src="assets/logo.png" alt="미래AI랩 MIRAE AI LAB" width="828" height="250"></picture><span class="brandbar-sub" id="brandbarSub">AX 사전 준비 체크리스트</span></div><section class="hero"><div class="brand" id="heroBrand">AX PRE-BRIEF v1.8</div><h1 id="heroTitle">AX 사전 희망사항 &amp; MVP 방향 체크리스트</h1><p class="hero-lead" id="heroLead">첫 MVP를 실제 회사에 가깝게 만들기 위해 <b>고객님의 판단이 꼭 필요한 부분만</b> 확인합니다.</p>
 <div class="hero-summary" id="heroSummary">
@@ -293,6 +295,47 @@ Object.assign(help,{
 "tools":["지금 쓰는 도구를 알면 더 정확히 맞출 수 있습니다.","엑셀 + 카톡 + POS 등","무엇을 대체하고 무엇을 연결할지 참고합니다."],
 "phase2":["나중에 필요할 가능성이 있는 기능을 미리 확인합니다.","결제(PG)나 기존 ERP 실연동 등","2차 개발 로드맵 참고용입니다.  ※ API = 다른 서비스와 정보를 주고받는 통로"],
 "metrics":["성과를 숫자로 보고 싶은 경우에만 고르세요.","업무시간, 재구매율 등","실증 성과 지표(KPI) 참고용입니다."]});
+/* ===== 외부 프로그램 연동 진단 (1차 08번) =====
+ * 원칙: 쓰고 있는 프로그램을 바꾸자는 게 아니라, 그대로 두고 필요한 정보만 AX와 잇는다.
+ * 기존 문항 key 는 건드리지 않고, 신규 문항은 ext_ 로 시작한다.
+ * 5번째 칸(meta): optional = 비워도 진행률에 영향 없음 / ifUsesTools = 프로그램을 쓰는 경우에만 보임
+ */
+const EXT_NONE="특별히 쓰는 프로그램 없음";
+const EXT_Q=[
+["multi","ext_tools","지금 업무에 쓰고 있는 프로그램이나 서비스가 있나요? (여러 개 선택)",["네이버 예약","네이버 스마트플레이스","카카오 예약 / 카카오톡 채널","자체 예약 프로그램","POS (매장 계산 프로그램)","쇼핑몰 (자사몰·스마트스토어 등)","배달·주문 플랫폼 (배민·쿠팡이츠 등)","고객관리 프로그램 (CRM)","그룹웨어·업무관리 프로그램","ERP·재고관리 프로그램","회계·세무 프로그램","구글 시트 / 엑셀","기타 외부 프로그램",EXT_NONE]],
+["long","ext_tool_names","쓰고 계신 프로그램 이름을 아시면 적어주세요","예: 네이버 예약 / 이지포스 / 세무사랑 / 카페24 / 자체 프로그램\n여러 개면 줄을 바꿔서 적어주세요. 모르시면 비워두셔도 됩니다.",{optional:true,ifUsesTools:true}],
+["multi","ext_data","그 프로그램에 있는 정보 중 AX에서도 함께 보고 싶은 것이 있나요? (여러 개 선택)",["예약정보","고객정보","상담기록","방문·이용이력","일정","주문정보","결제정보","매출정보","상품·서비스 정보","재고정보","배송·처리상태","직원·담당자 정보","기타","잘 모르겠음"],{ifUsesTools:true}],
+["single","ext_flow","지금은 그 정보를 다른 곳으로 어떻게 옮기고 계세요?",["이미 다른 프로그램과 자동으로 연결해서 씀","엑셀·파일로 내려받아 옮겨 씀","사람이 직접 다시 입력함","연결 없이 각각 따로 씀","잘 모르겠음"],{ifUsesTools:true}],
+["single","ext_export","그 프로그램에서 정보를 꺼내거나 다른 프로그램과 연결할 수 있는지 아시나요?",["API 또는 외부 연동 기능이 있음","엑셀·CSV로 내려받을 수 있음","관리자 화면에서 보기만 가능","프로그램 업체에 물어봐야 함","잘 모르겠음"],{ifUsesTools:true}],
+["single","ext_keep","지금 쓰는 프로그램은 앞으로도 계속 쓰실 생각인가요?",["계속 사용할 예정","더 나은 방법이 있으면 바꿀 수 있음","바꾸고 싶음 (지금 불편함)","잘 모르겠음"],{ifUsesTools:true}]];
+(function(){const s=core.find(x=>x[0]==="08");if(!s)return;
+s[1]="지금 쓰는 프로그램과 자료";
+s[2]=DESC["08"]="쓰고 계신 프로그램은 그대로 두고, 필요한 정보만 AX와 이어 쓸 수 있는지 확인합니다.";
+s[4].unshift(...EXT_Q)})();
+DESC["A"]=(optional.find(x=>x[0]==="A")||[])[2]="08번에서 고른 프로그램 말고도 함께 쓰는 도구나 보유 데이터를 더 알려주실 때만 작성해주세요.";
+Object.assign(subheads,{"08":[["지금 쓰는 프로그램",["ext_tools","ext_tool_names"]],["AX에서 함께 볼 정보",["ext_data"]],["지금의 연결 상태",["ext_flow","ext_export","ext_keep"]],["제공 가능한 자료",["materials"]]]});
+Object.assign(groups,{
+"ext_tools":[["예약·접수",["네이버 예약","네이버 스마트플레이스","카카오 예약 / 카카오톡 채널","자체 예약 프로그램"]],["판매·결제",["POS (매장 계산 프로그램)"]],["온라인 판매·주문",["쇼핑몰 (자사몰·스마트스토어 등)","배달·주문 플랫폼 (배민·쿠팡이츠 등)"]],["고객·업무관리",["고객관리 프로그램 (CRM)","그룹웨어·업무관리 프로그램"]],["재고·회계",["ERP·재고관리 프로그램","회계·세무 프로그램"]],["기본 도구·기타",["구글 시트 / 엑셀","기타 외부 프로그램",EXT_NONE]]],
+"ext_data":[["고객·예약",["예약정보","고객정보","상담기록","방문·이용이력","일정"]],["주문·매출",["주문정보","결제정보","매출정보"]],["상품·운영",["상품·서비스 정보","재고정보","배송·처리상태","직원·담당자 정보"]],["기타",["기타","잘 모르겠음"]]]});
+Object.assign(help,{
+"ext_tools":["프로그램마다 연결 방법이 달라서, 지금 쓰시는 환경을 먼저 확인합니다.","예약은 네이버 예약, 계산은 POS, 장부는 엑셀로 하고 계시면 셋 다 골라주세요.","그대로 살릴 것, 연결할 것, AX에서 새로 만들 것을 나누는 기준이 됩니다."],
+"ext_tool_names":["같은 POS라도 회사마다 연결 방법이 달라서, 이름을 알면 훨씬 정확하게 확인할 수 있어요.","네이버 예약 / 이지포스 / 세무사랑 / 카페24 / 자체 프로그램","어떤 방식으로 연결할 수 있는지 미리 알아보는 데 씁니다."],
+"ext_data":["어떤 기술을 쓸지가 아니라, 지금 어디에 있는 어떤 정보를 AX에서도 보고 싶은지 여쭤보는 거예요.","네이버 예약의 예약 내역과 POS의 매출을 AX 화면에서 한 번에 보기","AX 화면에 어떤 정보를 가져올지 정합니다."],
+"ext_flow":["지금 정보가 어떻게 오가는지 알면, 사람 손이 가장 많이 가는 곳부터 줄일 수 있어요.","예약 프로그램을 보고 엑셀에 다시 옮겨 적는 경우 → '사람이 직접 다시 입력함'","손으로 옮기는 일을 줄이는 순서를 정합니다."],
+"ext_export":["API(서로 다른 프로그램끼리 정보를 자동으로 주고받게 하는 연결 통로)나 엑셀 내려받기가 되는지에 따라 연결 방법이 달라져요.","관리자 화면에 '엑셀 다운로드' 버튼이 있으면 '엑셀·CSV로 내려받을 수 있음'을 골라주세요. CSV는 엑셀로 열리는 표 파일입니다.","연결 방법을 정합니다. 같은 프로그램이라도 업종·계약에 따라 가능 여부가 달라서, 모르시면 '잘 모르겠음'을 고르시면 저희가 확인합니다."],
+"ext_keep":["계속 쓰실 프로그램이면 그대로 두고 AX와 연결하고, 바꾸고 싶으시면 AX 안에서 새로 만드는 쪽으로 검토합니다.","예약은 네이버 예약을 계속 쓰고, 고객관리만 AX로 옮기고 싶은 경우 → '계속 사용할 예정'","기존 프로그램을 살릴지, AX에서 새로 만들지 정하는 기준이 됩니다."],
+"industry":["업종마다 중요한 업무가 다릅니다.","미용실·피부관리·병원·상담·숙박처럼 예약이 중요한 곳은 '서비스', 학원은 '교육'을 골라주세요.","업종에 맞는 메뉴와 AI 기능의 기본틀을 정합니다."],
+"tools":["08번에서 고른 프로그램 말고도 카톡 단톡방·수기장부처럼 함께 쓰는 도구가 있으면 알려주세요.","엑셀 + 카톡 + 수기장부","무엇을 대체하고 무엇을 연결할지 참고합니다."]});
+/* 결과(카톡·PDF)에서 쓰는 짧은 이름 */
+const EXT_SHORT={ext_tools:"현재 사용 프로그램",ext_tool_names:"프로그램 이름",ext_data:"AX에서 활용 희망 데이터",ext_flow:"현재 연결 방식",ext_export:"외부 연동 가능 여부",ext_keep:"기존 프로그램 계속 사용 여부"};
+function usesTools(){const v=state.ext_tools;return !(Array.isArray(v)&&v.length===1&&v[0]===EXT_NONE)}
+function qMeta(q){return (q&&q[4]&&typeof q[4]==="object")?q[4]:{}}
+function qVisible(q){return !(qMeta(q).ifUsesTools&&!usesTools())}
+function qOptional(q){return !!qMeta(q).optional}
+function qSatisfied(q){return !qVisible(q)||qOptional(q)||isAnswered(q)}
+function extNote(k){if(phase!==1||k!=="ext_tools")return "";
+if(!usesTools())return `<div class="rechint">프로그램을 쓰지 않으신다고 고르셔서, 이어지는 <b>연결 관련 질문은 건너뜁니다.</b></div>`;
+return `<div class="rechint"><b>쓰고 계신 프로그램을 없애자는 게 아닙니다.</b> 예약·계산·고객관리 프로그램은 그대로 두고, 필요한 정보만 AX와 연결할 수도 있어요. 프로그램마다 연결 방법이 달라서 지금 쓰시는 환경을 먼저 여쭤봅니다.</div>`}
 const store={ok:true,warned:false,get(){try{return localStorage.getItem(activeKey())}catch(e){this.fail();return null}},set(v){try{localStorage.setItem(activeKey(),v)}catch(e){this.fail()}},fail(){this.ok=false;if(!this.warned){this.warned=true;const el=document.getElementById("storageWarn");if(el)el.style.display="block"}}};
 let phase=1;try{const qp=new URLSearchParams(location.search).get("p");if(qp==="1"||qp==="2")phase=+qp;else{const h=(location.hash||"").toLowerCase();if(h.indexOf("phase2")>-1||h==="#p2")phase=2;else if(h.indexOf("phase1")>-1||h==="#p1")phase=1;else if(localStorage.getItem(PHASEKEY)==="2")phase=2}}catch(e){}
 let state={};try{state=JSON.parse(store.get()||"{}")||{}}catch(e){state={}}
@@ -305,17 +348,17 @@ function renderTimes(){startedAtSide.textContent=state.__startedAt?fmt(state.__s
 function guide(k){const g=help[k]||["이 질문은 고객님의 선택이 필요한 부분입니다.","현재 상황과 가장 가까운 항목을 골라주세요.","선택 결과를 기능·화면·우선순위에 반영합니다."];return `<div class="guide"><div><b>왜 이 정보가 필요한가요?</b> ${esc(g[0])}</div><div><b>예시</b> ${esc(g[1])}</div><div><b>어디에 반영되나요?</b> ${esc(g[2])}</div></div>`}
 function optHtml(t,k,o,i){const checked=t==="single"?state[k]===o:(Array.isArray(state[k])&&state[k].includes(o));const ev=t==="single"?`pickSingle('${k}',this.dataset.v)`:`toggleMulti('${k}',this.dataset.v,this.checked)`;return `<div class="opt"><input type="${t==="single"?"radio":"checkbox"}" id="${k}_${i}" data-v="${esc(o)}" ${t==="single"?`name="${k}"`:""} ${checked?"checked":""} onchange="${ev}"><label for="${k}_${i}">${esc(o)}${optMark(k,o)}</label></div>`}
 function groupedOptions(t,k,d){if(!groups[k])return `<div class="grid">${sortRec(k,d).map((o,i)=>optHtml(t,k,o,i)).join("")}</div>`;let idx=0;return `<div class="option-groups">${groups[k].map(g=>`<div class="opt-group"><div class="opt-group-title">${esc(g[0])}</div><div class="grid">${sortRec(k,g[1].filter(o=>d.includes(o))).map(o=>optHtml(t,k,o,idx++)).join("")}</div></div>`).join("")}</div>`}
-function renderQ(q,first){const[t,k,l,d]=q;let b="";if(t==="text")b=`<input class="textinput" value="${esc(state[k]||"")}" placeholder="${esc(d||"")}" oninput="state['${k}']=this.value;save()">`;else if(t==="long")b=`<textarea class="longtext" placeholder="${esc(d||"")}" oninput="state['${k}']=this.value;save()">${esc(state[k]||"")}</textarea>`;else if(t==="single"||t==="multi")b=groupedOptions(t,k,d);else b=`<label class="confirm"><input type="checkbox" ${state[k]?"checked":""} onchange="state['${k}']=this.checked;save()"><span>${esc(l)}</span></label>`;return `<div class="q ${first?"first-in-sub":""}"><div class="qlabel">${esc(l)}</div>${guide(k)}${noteFor(k)}${b}</div>`}
-function renderSection(s){const[num,title,desc,level,qs]=s,c=secColors[num],subs=subheads[num]||[["질문",qs.map(q=>q[1])]];let inner="";subs.forEach((sub,si)=>{const sq=qs.filter(q=>sub[1].includes(q[1]));if(!sq.length)return;inner+=`<div class="subsection-title">${si+1}. ${esc(sub[0])} <span class="subsection-count">${sq.length}개 질문</span></div>`+sq.map((q,i)=>renderQ(q,i===0)).join("")});return `<section class="section" id="sec_${num}" data-navtarget style="--sec-main:${c.main};--sec-soft:${c.soft};--sec-line:${c.line}"><div class="sectop"><div class="secmark"><div class="secnum" style="background:${c.main}">${num}</div><span class="req ${level==="필수"?"required":"optional"}">${level}</span></div><div><h2>${esc(title)}</h2><p class="desc">${esc(desc)}</p></div></div><div class="subroadmap"><div class="subroadmap-title">이 항목은 ${subs.length}개의 소목차로 구성됩니다.</div><div class="subchips">${subs.map((x,i)=>`<span class="subchip">${i+1}. ${esc(x[0])}</span>`).join("")}</div></div>${inner}</section>`}
+function renderQ(q,first){const[t,k,l,d]=q;let b="";if(t==="text")b=`<input class="textinput" value="${esc(state[k]||"")}" placeholder="${esc(d||"")}" oninput="state['${k}']=this.value;save()">`;else if(t==="long")b=`<textarea class="longtext" placeholder="${esc(d||"")}" oninput="state['${k}']=this.value;save()">${esc(state[k]||"")}</textarea>`;else if(t==="single"||t==="multi")b=groupedOptions(t,k,d);else b=`<label class="confirm"><input type="checkbox" ${state[k]?"checked":""} onchange="state['${k}']=this.checked;save()"><span>${esc(l)}</span></label>`;return `<div class="q ${first?"first-in-sub":""}"><div class="qlabel">${esc(l)}${qOptional(q)?' <span class="tag optional">선택</span>':""}</div>${guide(k)}${noteFor(k)}${b}</div>`}
+function renderSection(s){const[num,title,desc,level,qs0]=s,c=secColors[num],qs=qs0.filter(qVisible),subs=(subheads[num]||[["질문",qs0.map(q=>q[1])]]).filter(sub=>qs.some(q=>sub[1].includes(q[1])));let inner="";subs.forEach((sub,si)=>{const sq=qs.filter(q=>sub[1].includes(q[1]));if(!sq.length)return;inner+=`<div class="subsection-title">${si+1}. ${esc(sub[0])} <span class="subsection-count">${sq.length}개 질문</span></div>`+sq.map((q,i)=>renderQ(q,i===0)).join("")});return `<section class="section" id="sec_${num}" data-navtarget style="--sec-main:${c.main};--sec-soft:${c.soft};--sec-line:${c.line}"><div class="sectop"><div class="secmark"><div class="secnum" style="background:${c.main}">${num}</div><span class="req ${level==="필수"?"required":"optional"}">${level}</span></div><div><h2>${esc(title)}</h2><p class="desc">${esc(desc)}</p></div></div><div class="subroadmap"><div class="subroadmap-title">이 항목은 ${subs.length}개의 소목차로 구성됩니다.</div><div class="subchips">${subs.map((x,i)=>`<span class="subchip">${i+1}. ${esc(x[0])}</span>`).join("")}</div></div>${inner}</section>`}
 function render(){const sp=spec(),all=sp.core.concat(sp.optional);
 nav.innerHTML=`<button class="navbtn" data-target="guideTop" data-color="#17202b" onclick="goTo('guideTop')"><span class="navdot" style="background:#c5a15a"></span><span class="navtext">${phase===2?"2차 안내":"시작 전 안내"}</span><span class="tag optional">안내</span></button>`+all.map(x=>{const c=secColors[x[0]],req=x[3]==="필수";return `<button class="navbtn" data-target="sec_${x[0]}" data-color="${c.main}" onclick="goTo('sec_${x[0]}')"><span class="navdot" style="background:${c.main}"></span><span class="navtext">${x[0]} · ${esc(x[1])}</span><span class="tag ${req?"required":"optional"}">${req?"필수":"선택"}</span></button>`}).join("");
 content.innerHTML=introHTML()+sp.core.map(renderSection).join("")+(sp.optional.length?`<div class="optional-intro"><h2>선택 참고사항</h2>아래 내용은 이미 기본 설계에 포함되어 있거나, MVP 이후 실증과정에서 충분히 보완할 수 있는 정보입니다. <b>꼭 작성하지 않으셔도 됩니다.</b> 다만 현재 상황이나 향후 계획을 조금 더 알려주고 싶은 분만 편하게 입력해주세요.</div>`+sp.optional.map(renderSection).join(""):"")+`<div class="free-note"><h2>추가로 전달하고 싶은 내용 <span style="font-size:13px;color:#94a3b8">(선택사항)</span></h2><div class="hint">예: “현장 직원이 스마트폰으로 최대한 간단하게 쓰게 해주세요.”<br>예: “기존 엑셀 양식의 고객번호와 거래처 구분은 꼭 유지하고 싶습니다.”</div><textarea placeholder="자유롭게 입력해주세요." oninput="state.__freeNote=this.value;save()">${esc(state.__freeNote||"")}</textarea></div>`+finishBlock();
 syncTabs();updateProgress();renderTimes();setupObserver();setupReveal()}
 function pickSingle(k,v){state[k]=v;save();if(k==="industry"){const y=window.scrollY;render();window.scrollTo(0,y)}}
 function finishBlock(){return `<div class="finish"><h2>${phase===2?"2차 체크리스트 작성이 끝나셨나요?":"작성이 끝나셨나요?"}</h2><p>아래 버튼으로 결과를 저장한 뒤 담당자에게 전달해주세요.</p><div id="finishStage" class="finish-stage">필수 0 / 9 완료</div>${osBlock()}<div class="finish-actions"><button class="bigbtn" onclick="saveKakaoResult()">카톡용 저장<small>복사 + TXT 파일 저장</small></button><button class="bigbtn pdf" onclick="makePDF()">PDF 저장<small>인쇄 화면에서 PDF 선택</small></button></div><p class="finish-hint">작성 내용은 이 기기에 자동 저장되어 있어, 중간에 나갔다가 다시 들어와도 이어서 작성하실 수 있습니다.</p></div>`}
-function toggleMulti(k,v,c){let a=Array.isArray(state[k])?state[k]:[];if(c&&!a.includes(v))a.push(v);if(!c)a=a.filter(x=>x!==v);state[k]=a;save()}
+function toggleMulti(k,v,c){const before=k==="ext_tools"?usesTools():null;let a=Array.isArray(state[k])?state[k]:[];if(c&&!a.includes(v))a.push(v);if(!c)a=a.filter(x=>x!==v);state[k]=a;save();if(before!==null&&before!==usesTools()){const y=window.scrollY;render();window.scrollTo(0,y)}}
 function isAnswered(q){const[t,k]=q,v=state[k];if(t==="confirm")return v===true;if(Array.isArray(v))return v.length>0;return String(v||"").trim()!==""}
-function updateProgress(){const sp=spec();const completed=sp.core.filter(sec=>sec[4].every(isAnswered)).length;const total=sp.core.length;const p=Math.round(completed/total*100);pct.textContent=p+"%";bar.style.width=p+"%";progressFloatPct.textContent=p+"%";progressFloatFill.style.width=p+"%";progressFloatStage.textContent=`${completed} / ${total} 완료`;const fst=document.getElementById("finishStage");if(fst){fst.textContent=completed===total?`필수 항목 ${total}개를 모두 작성하셨습니다.`:`필수 ${total}개 중 ${completed}개 완료 · 남은 항목이 있어도 저장할 수 있습니다.`}if(state.__startedAt||completed>0)progressFloat.classList.add("show");else progressFloat.classList.remove("show")}
+function updateProgress(){const sp=spec();const completed=sp.core.filter(sec=>sec[4].every(qSatisfied)).length;const total=sp.core.length;const p=Math.round(completed/total*100);pct.textContent=p+"%";bar.style.width=p+"%";progressFloatPct.textContent=p+"%";progressFloatFill.style.width=p+"%";progressFloatStage.textContent=`${completed} / ${total} 완료`;const fst=document.getElementById("finishStage");if(fst){fst.textContent=completed===total?`필수 항목 ${total}개를 모두 작성하셨습니다.`:`필수 ${total}개 중 ${completed}개 완료 · 남은 항목이 있어도 저장할 수 있습니다.`}if(state.__startedAt||completed>0)progressFloat.classList.add("show");else progressFloat.classList.remove("show")}
 function setupReveal(){const els=[...document.querySelectorAll(".reveal")];if(!els.length)return;
 const reduce=window.matchMedia&&window.matchMedia("(prefers-reduced-motion:reduce)").matches;
 if(reduce||!("IntersectionObserver" in window)){els.forEach(e=>e.classList.add("in"));return}
@@ -332,9 +375,9 @@ function togglePause(){if(!timer.running){startTimer();return}timer.paused=!time
 function resetTimer(){timer.remaining=900;timer.paused=false;if(!timer.running)startTimer();else updateTimer()}
 function endTimer(){if(timer.interval)clearInterval(timer.interval);timer.running=false;timer.paused=false;timer.remaining=900;timerFloat.classList.remove("show","expanded");updateTimer()}
 function answered(v,t){if(t==="confirm")return v===true;if(Array.isArray(v))return v.length>0;return String(v||"").trim()!==""}
-function rows(){const r=[];spec().core.concat(spec().optional).forEach(sec=>sec[4].forEach(q=>{const[t,k,l]=q,v=state[k];if(answered(v,t))r.push({section:sec[0]+" "+sec[1],q:l,a:Array.isArray(v)?v.join(", "):(t==="confirm"?"확인":String(v))})}));if(String(state.__freeNote||"").trim())r.push({section:"추가 의견",q:"추가로 전달하고 싶은 내용",a:state.__freeNote.trim()});return r}
-function buildText(){let o=[spec().title,"작성 시작: "+fmt(state.__startedAt),"결과 저장: "+fmt(new Date().toISOString()),""];let c="";rows().forEach(x=>{if(x.section!==c){c=x.section;o.push("["+c+"]")}o.push("Q. "+x.q);o.push("A. "+x.a);o.push("")});return o.join("\n")}
-function buildPrint(){const r=rows(),by={};r.forEach(x=>(by[x.section]??=[]).push(x));let b=`<div class="print-head"><h1>${esc(spec().label)} 결과</h1><div class="print-meta">작성 시작: ${esc(fmt(state.__startedAt))}<br>결과 생성: ${esc(fmt(new Date().toISOString()))}<br>응답 항목 수: ${r.length}</div></div>`;Object.entries(by).forEach(([s,a])=>b+=`<div class="print-sec"><h2>${esc(s)}</h2>${a.map(x=>`<div class="print-item"><div class="print-q">Q. ${esc(x.q)}</div><div>A. ${esc(x.a)}</div></div>`).join("")}</div>`);return b}
+function rows(){const r=[];spec().core.concat(spec().optional).forEach(sec=>sec[4].forEach(q=>{const[t,k,l]=q,v=state[k];if(!qVisible(q))return;if(answered(v,t))r.push({key:k,section:sec[0]+" "+sec[1],q:l,a:Array.isArray(v)?v.join(", "):(t==="confirm"?"확인":String(v))})}));if(String(state.__freeNote||"").trim())r.push({section:"추가 의견",q:"추가로 전달하고 싶은 내용",a:state.__freeNote.trim()});return r}
+function buildText(){let o=[spec().title,"작성 시작: "+fmt(state.__startedAt),"결과 저장: "+fmt(new Date().toISOString()),""];let c="";rows().forEach(x=>{if(x.section!==c){c=x.section;o.push("["+c+"]")}if(EXT_SHORT[x.key]){o.push("["+EXT_SHORT[x.key]+"]");o.push(x.a)}else{o.push("Q. "+x.q);o.push("A. "+x.a)}o.push("")});return o.join("\n")}
+function buildPrint(){const r=rows(),by={};r.forEach(x=>(by[x.section]??=[]).push(x));let b=`<div class="print-head"><h1>${esc(spec().label)} 결과</h1><div class="print-meta">작성 시작: ${esc(fmt(state.__startedAt))}<br>결과 생성: ${esc(fmt(new Date().toISOString()))}<br>응답 항목 수: ${r.length}</div></div>`;Object.entries(by).forEach(([s,a])=>b+=`<div class="print-sec"><h2>${esc(s)}</h2>${a.map(x=>`<div class="print-item"><div class="print-q">${EXT_SHORT[x.key]?"["+esc(EXT_SHORT[x.key])+"]":"Q. "+esc(x.q)}</div><div style="white-space:pre-wrap">${EXT_SHORT[x.key]?"":"A. "}${esc(x.a)}</div></div>`).join("")}</div>`);return b}
 function makePDF(){ensureStarted();save();if(!rows().length){alert("아직 작성된 답변이 없습니다. 항목을 먼저 선택해주세요.");return}if(typeof window.print!=="function"){alert("이 브라우저에서는 인쇄(PDF 저장)가 지원되지 않습니다. 화면 우측 하단 메뉴에서 Chrome·Safari 등 기본 브라우저로 열어주세요.");return}printResult.innerHTML=buildPrint();document.body.classList.add("printing");setTimeout(()=>{try{window.print()}catch(e){alert("인쇄를 시작하지 못했습니다. 기본 브라우저에서 다시 시도해주세요.")}setTimeout(()=>document.body.classList.remove("printing"),500)},100)}
 function dl(name,text){try{const blob=new Blob(["\ufeff"+text],{type:"text/plain;charset=utf-8"}),url=URL.createObjectURL(blob),a=document.createElement("a");a.href=url;a.download=name;a.rel="noopener";a.style.display="none";document.body.appendChild(a);a.click();setTimeout(()=>{a.remove();URL.revokeObjectURL(url)},1500);return true}catch(e){return false}}
 function copyText(t){if(navigator.clipboard&&window.isSecureContext){return navigator.clipboard.writeText(t).then(()=>true).catch(()=>legacyCopy(t))}return Promise.resolve(legacyCopy(t))}
@@ -356,12 +399,13 @@ function osReady(){const u=osBase();return !!(OSTOKEN&&u&&String(OSCFG.supabaseA
 function osActive(){return osReady()&&phase===OSPHASE}
 function osPayload(){const sp=spec(),now=new Date().toISOString(),labels={},ans=[];
 sp.core.concat(sp.optional).forEach(sec=>sec[4].forEach(q=>{const t=q[0],k=q[1];labels[k]=q[2];
-if(!answered(state[k],t))return;
+if(!qVisible(q)||!answered(state[k],t))return;
 ans.push({questionId:k,questionCode:k,sectionCode:sec[0],sectionTitle:sec[1],label:q[2],value:t==="confirm"?true:state[k],answeredAt:now,updatedAt:now})}));
 const note=String(state.__freeNote||"").trim();
 if(note)ans.push({questionId:"__freeNote",questionCode:"__freeNote",sectionCode:"free",sectionTitle:"추가 의견",label:"추가로 전달하고 싶은 내용",value:note,answeredAt:now,updatedAt:now});
-const total=sp.core.reduce((n,x)=>n+x[4].length,0);
-const done=sp.core.reduce((n,x)=>n+x[4].filter(isAnswered).length,0);
+const reqQ=sp.core.flatMap(x=>x[4]).filter(q=>qVisible(q)&&!qOptional(q));
+const total=reqQ.length;
+const done=reqQ.filter(isAnswered).length;
 return{respondentRole:"client",
 respondentProfile:{name:String(state.writer||"").trim(),position:"",department:"",email:"",phone:""},
 consented:true,consentedAt:now,answers:ans,currentSectionId:null,currentPageIndex:0,
@@ -465,7 +509,7 @@ else if(e.key==="0"){e.preventDefault();lbFit()}});
 /* ===== 1차 답변 참조 (2차 화면) ===== */
 function prev1(){try{return JSON.parse(localStorage.getItem(KEY)||"{}")||{}}catch(e){return{}}}
 function prevPicks(){const p=prev1();return (Array.isArray(p.ax_modules)?p.ax_modules:[]).concat(Array.isArray(p.must_have)?p.must_have:[])}
-function prevSummaryHTML(){const p=prev1();const rows=[["회사명",p.company],["업종",p.industry],["주요 사용자",p.roles],["이번 AX 목표",p.goals],["가장 큰 문제",p.biggest_pain],["1차 우선범위",p.must_have],["합격 기준",p.acceptance]].filter(x=>x[1]&&(!Array.isArray(x[1])||x[1].length));
+function prevSummaryHTML(){const p=prev1();const rows=[["회사명",p.company],["업종",p.industry],["주요 사용자",p.roles],["이번 AX 목표",p.goals],["가장 큰 문제",p.biggest_pain],["1차 우선범위",p.must_have],["합격 기준",p.acceptance],["현재 사용 프로그램",p.ext_tools],["프로그램 이름",(Array.isArray(p.ext_tools)&&p.ext_tools.length===1&&p.ext_tools[0]===EXT_NONE)?"":p.ext_tool_names]].filter(x=>x[1]&&(!Array.isArray(x[1])||x[1].length));
 if(!rows.length)return `<div class="callout navy reveal"><span class="ci">참고</span><div class="cb">이 기기에는 1차 체크리스트 응답이 저장되어 있지 않습니다. 1차를 작성하셨던 기기·브라우저에서 열면 여기에 <b>1차 답변 요약</b>이 함께 표시됩니다.</div></div>`;
 return `<div class="prevbox reveal"><h4>1차에서 이렇게 답하셨습니다</h4><p class="prevlead">그때 정한 우선순위와 지금 화면이 얼마나 맞는지 비교하면서 작성해주세요.</p><div class="prevgrid">${rows.map(x=>`<div class="previtem"><b>${esc(x[0])}</b><span>${esc(Array.isArray(x[1])?x[1].join(", "):String(x[1]))}</span></div>`).join("")}</div></div>`}
 /* ===== 업종별 추천 표시 ===== */
@@ -477,12 +521,21 @@ const PRESET={
 "교육":{goals:["매출/재구매 늘리기","고객 이탈 줄이기","반복업무/수기작업 줄이기","견적/상담 전환율 높이기"],workflow_steps:["문의/리드","상담","계약","예약","결제/정산","후속관리","재구매/재방문"],ax_modules:["대표 대시보드","고객/거래처 관리","상담/견적","예약/일정","재구매/캠페인","직원/담당자"],ai_features:["고객 이탈 위험","재구매/재방문 추천","오늘의 운영 브리핑","고객 맞춤 추천"],customer_features:["예약","요청/문의","진행상황 확인","리포트/결과 확인","알림","마이페이지"]},
 "웰니스/피트니스":{goals:["매출/재구매 늘리기","고객 이탈 줄이기","반복업무/수기작업 줄이기","고객용 플랫폼 만들기"],workflow_steps:["문의/리드","상담","예약","결제/정산","후속관리","재구매/재방문"],ax_modules:["대표 대시보드","고객/거래처 관리","예약/일정","재구매/캠페인","매출/정산","직원/담당자"],ai_features:["재구매/재방문 추천","고객 이탈 위험","고객 맞춤 추천","오늘의 운영 브리핑"],customer_features:["예약","재예약/재주문","진행상황 확인","마이페이지","알림","리뷰"]},
 "인테리어/건설":{goals:["견적/상담 전환율 높이기","일정/배정/현장관리 개선","재고/원가/수익성 개선","대표가 현황을 한눈에 보기"],workflow_steps:["문의/리드","상담","견적","계약","배정","발주/구매","현장/프로젝트","검수/완료","결제/정산","A/S"],ax_modules:["대표 대시보드","상담/견적","프로젝트/현장","원가/수익성","고객/거래처 관리","직원/담당자"],ai_features:["일정/배정 추천","견적/가격 참고","원가/수익성 분석","위험/이상 징후 알림"],customer_features:["견적/상담 신청","진행상황 확인","요청/문의","리포트/결과 확인"]}};
+/* 외부 프로그램 추천: 예약 중심 업종(서비스·웰니스·교육)은 예약 프로그램과 고객·방문 정보를 추천 */
+(function(){const R=["네이버 예약","자체 예약 프로그램"],RD=["예약정보","고객정보","방문·이용이력","일정"];
+const add=(ind,t,d)=>{if(PRESET[ind]){PRESET[ind].ext_tools=t;PRESET[ind].ext_data=d}};
+add("서비스",R,RD);add("웰니스/피트니스",R,RD);add("교육",R,RD);
+add("외식/프랜차이즈",["POS (매장 계산 프로그램)","배달·주문 플랫폼 (배민·쿠팡이츠 등)","네이버 예약"],["주문정보","매출정보","재고정보","예약정보"]);
+add("도소매/유통",["POS (매장 계산 프로그램)","쇼핑몰 (자사몰·스마트스토어 등)","ERP·재고관리 프로그램"],["주문정보","재고정보","매출정보","상품·서비스 정보"]);
+add("제조",["ERP·재고관리 프로그램","회계·세무 프로그램","구글 시트 / 엑셀"],["주문정보","재고정보","상품·서비스 정보","배송·처리상태"]);
+add("인테리어/건설",["구글 시트 / 엑셀","회계·세무 프로그램","그룹웨어·업무관리 프로그램"],["고객정보","상담기록","일정","결제정보"])})();
 function recFor(k){if(phase!==1)return null;const p=PRESET[state.industry];return p&&p[k]?p[k]:null}
 function optMark(k,o){if(phase===1){const r=recFor(k);return r&&r.includes(o)?'<span class="optbadge rec">추천</span>':""}
 if(k==="p2_fix_first"||k==="p2_drop"){return prevPicks().includes(o)?'<span class="optbadge prev">1차 선택</span>':""}
 return ""}
 function sortRec(k,arr){const r=recFor(k);if(!r||!r.length)return arr;return arr.slice().sort((a,b)=>(r.includes(b)?1:0)-(r.includes(a)?1:0))}
-function noteFor(k){const r=recFor(k);
+function noteFor(k){return extNote(k)+noteForBase(k)}
+function noteForBase(k){const r=recFor(k);
 if(r&&r.length)return `<div class="rechint"><b>${esc(state.industry)}</b> 업종에서 많이 고르는 항목에 <span class="optbadge rec">추천</span> 표시를 붙였습니다. 참고만 하시고 실제 상황에 맞게 골라주세요.</div>`;
 if(phase===2&&(k==="p2_fix_first"||k==="p2_drop")&&prevPicks().length)return `<div class="rechint">1차 체크리스트에서 고르셨던 항목에 <span class="optbadge prev">1차 선택</span> 표시를 붙였습니다.</div>`;
 return ""}

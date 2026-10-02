@@ -34,17 +34,22 @@ const YES_NO = [
 
 function placement(q, sectionNum, index, required, help) {
   const [type, key, label, data] = q
+  /* 5번째 칸: optional(비워도 됨) / ifUsesTools(프로그램을 쓰는 경우에만 묻는 문항) */
+  const meta = q[4] && typeof q[4] === 'object' ? q[4] : {}
   const h = help[key] || []
+  /* OS 조건식은 '여러 개 중 없음만 골랐을 때 숨김'을 표현할 수 없어서,
+     조건부 문항은 숨기는 대신 선택(필수 아님)으로 두고 도움말에 적어둔다. */
+  const onlyIfTools = meta.ifUsesTools ? ' (프로그램을 쓰는 경우에만 답하는 문항)' : ''
   const raw = type === 'confirm' ? YES_NO : Array.isArray(data) ? data.map((o) => ({ label: o, value: o })) : []
   return {
     id: `${key}__p`,
     questionId: key,          // ← 체크리스트가 보내는 answers[].questionId 와 반드시 같아야 함
     questionCode: key,
     questionText: label,
-    helpText: [h[0], h[2]].filter(Boolean).join(' · '),
+    helpText: [h[0], h[2]].filter(Boolean).join(' · ') + onlyIfTools,
     example: h[1] || (type === 'text' || type === 'long' ? String(data || '') : ''),
     type: TYPE[type] || 'short_text',
-    category: CATEGORY[sectionNum] || 'company',
+    category: key.startsWith('ext_') ? 'systems' : CATEGORY[sectionNum] || 'company',
     scope: 'custom',
     scoringDomain: 'none',
     expertRiskGrade: 'green',
@@ -52,7 +57,7 @@ function placement(q, sectionNum, index, required, help) {
       id: `${key}__o${i}`, label: o.label, value: o.value, score: 0, riskSignal: 'none', orderIndex: i,
     })),
     repeatTableColumns: [],
-    required,
+    required: required && !meta.optional && !meta.ifUsesTools,
     condition: null,
     sourceScope: 'custom',
     orderIndex: index,
