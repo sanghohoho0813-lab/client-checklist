@@ -53,6 +53,8 @@
 ## 6. 프로젝트 구조 (참고)
 
 - `index.html` — 체크리스트 전체 (HTML·CSS·JS 한 파일, 빌드 과정 없음)
+  - 화면은 **주제별 한 장씩**(`steps()`)입니다. 문항을 많이 늘려 한 장이 너무 길어지면 `STEP_SPLIT` 으로 나눕니다.
+  - 테스트로 모든 문항을 채울 때는 현재 장만 화면에 있으므로, 장마다 `state.__step=i; render()` 로 넘기며 채웁니다.
 - `assets/config.js` — 미래AI랩 OS(Supabase) 연동 설정. 대표님이 값을 넣는 유일한 파일
 - `os-integration/` — OS 연동용. `install.sql` 은 `build-blueprint.mjs` 가 만들어내므로 직접 고치지 않습니다
 - 문항을 고치면 `node os-integration/build-blueprint.mjs` 를 다시 돌려야 OS 쪽 설문 구조가 맞습니다

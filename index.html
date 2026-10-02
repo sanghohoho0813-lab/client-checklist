@@ -163,6 +163,63 @@
 }
 .qlabel .tag{margin-left:8px;vertical-align:3px;font-size:11px}
 .previtem span{white-space:pre-line}
+
+/* ===== 주제별 한 장씩 (단계 화면) ===== */
+body{overflow-x:hidden}
+.maincol{min-width:0}
+.stepbar{position:sticky;top:0;z-index:40;padding:10px 0 12px;margin-top:-10px;background:linear-gradient(180deg,var(--bg) 78%,rgba(244,246,248,0))}
+.sb-card{background:#fff;border:1px solid var(--line);border-radius:18px;padding:16px 18px 14px;box-shadow:0 10px 28px rgba(15,23,42,.08)}
+.sb-row{display:flex;align-items:center;gap:14px}
+.sb-label{font-size:14px;font-weight:800;color:#64748b;white-space:nowrap}
+.sb-pct{font-size:30px;font-weight:950;color:var(--ink);line-height:1;letter-spacing:-.02em;min-width:66px;font-variant-numeric:tabular-nums}
+.sb-track{flex:1;height:14px;border-radius:999px;background:#edf0f3;overflow:hidden;min-width:60px}
+.sb-fill{height:100%;width:0;border-radius:999px;background:linear-gradient(90deg,#276B68,#c5a15a);transition:width .6s cubic-bezier(.2,.8,.2,1)}
+.sb-count{font-size:15px;font-weight:800;color:#8a6d33;background:#fdf5e6;border:1px solid #ecd9b0;border-radius:999px;padding:5px 12px;white-space:nowrap}
+.sb-steps{display:flex;gap:7px;margin-top:13px;overflow-x:auto;scrollbar-width:none;padding:1px 1px 2px;scroll-behavior:smooth}
+.sb-steps::-webkit-scrollbar{display:none}
+.sb-chip{flex:0 0 auto;border:1px solid #dfe4ea;background:#fff;color:#64748b;border-radius:999px;padding:7px 12px;font-size:13.5px;font-weight:800;cursor:pointer;white-space:nowrap;transition:background .2s ease,color .2s ease,border-color .2s ease}
+.sb-chip:hover{border-color:#b9c3cf}
+.sb-chip.done{background:#e8f3ee;border-color:#bfdccf;color:#1c5b46}
+.sb-chip.done:before{content:"✓ "}
+.sb-chip.current{background:var(--ink);border-color:var(--ink);color:#fff}
+.sb-chip.current:before{content:none}
+.step{display:grid;gap:17px}
+.stepnav{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:14px;background:#fff;border:1px solid var(--line);border-radius:18px;padding:14px 16px;box-shadow:0 10px 30px rgba(15,23,42,.045)}
+.sn-prev{border:1px solid #d8dee6;background:#fff;color:#334155;border-radius:13px;padding:15px 18px;font-size:16px;font-weight:800;cursor:pointer;white-space:nowrap}
+.sn-prev:hover{background:#f8fafc}
+.sn-next{border:0;background:var(--ink);color:#fff;border-radius:13px;padding:12px 22px;font-size:18px;font-weight:900;cursor:pointer;display:flex;flex-direction:column;align-items:flex-end;gap:3px;text-align:right;transition:transform .14s ease,box-shadow .14s ease}
+.sn-next:hover{transform:translateY(-1px);box-shadow:0 10px 24px rgba(23,32,43,.22)}
+.sn-next small{font-size:13px;font-weight:700;color:#ecd09a;max-width:320px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.sn-status{text-align:center;font-size:15px;color:#64748b;font-weight:700;line-height:1.5;word-break:keep-all}
+.sn-status.ok{color:#1c5b46}
+.tag.done{color:#1c5b46;background:#dcefe6}
+.step-out-left{animation:stepOutL .17s ease-in forwards}
+.step-out-right{animation:stepOutR .17s ease-in forwards}
+.step-in-right{animation:stepInR .34s cubic-bezier(.2,.8,.2,1)}
+.step-in-left{animation:stepInL .34s cubic-bezier(.2,.8,.2,1)}
+@keyframes stepOutL{to{opacity:0;transform:translateX(-44px)}}
+@keyframes stepOutR{to{opacity:0;transform:translateX(44px)}}
+@keyframes stepInR{from{opacity:0;transform:translateX(52px)}to{opacity:1;transform:none}}
+@keyframes stepInL{from{opacity:0;transform:translateX(-52px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){.step-out-left,.step-out-right,.step-in-right,.step-in-left{animation:none}.sb-fill{transition:none}}
+@media(max-width:900px){
+.stepbar{padding:6px 0 10px;margin-top:-6px}
+.sb-card{padding:11px 12px 10px;border-radius:14px}
+.sb-row{gap:9px}.sb-label{display:none}.sb-pct{font-size:23px;min-width:52px}.sb-track{height:10px}.sb-count{font-size:13px;padding:3px 9px}
+.sb-steps{margin-top:9px;gap:6px}.sb-chip{padding:6px 10px;font-size:13px}
+.stepnav{grid-template-columns:1fr 1fr;gap:10px;padding:12px}
+.sn-status{grid-column:1/-1;grid-row:1;font-size:14px}
+.sn-prev{padding:14px 10px;font-size:15px}
+.sn-next{padding:11px 14px;font-size:17px;align-items:center;text-align:center}
+.sn-next small{max-width:100%;font-size:12px}
+.stepnav .sn-only{grid-column:1/-1}
+}
+.subchip.on{background:var(--sec-main);border-color:var(--sec-main);color:#fff}
+.subpart{display:inline-block;margin-left:6px;font-size:13.5px;font-weight:800;color:#64748b}
+.skiprow{margin-top:14px}
+.sn-skip{border:1px solid var(--ink);background:#fff;color:var(--ink);border-radius:12px;padding:12px 18px;font-size:15.5px;font-weight:900;cursor:pointer}
+.sn-skip:hover{background:var(--ink);color:#fff}
+@media(max-width:900px){.subpart{display:block;margin:6px 0 0}.sn-skip{width:100%}}
 </style></head><body>
 <div class="shell"><div class="brandbar"><picture><source srcset="assets/logo.webp" type="image/webp"><img src="assets/logo.png" alt="미래AI랩 MIRAE AI LAB" width="828" height="250"></picture><span class="brandbar-sub" id="brandbarSub">AX 사전 준비 체크리스트</span></div><section class="hero"><div class="brand" id="heroBrand">AX PRE-BRIEF v1.8</div><h1 id="heroTitle">AX 사전 희망사항 &amp; MVP 방향 체크리스트</h1><p class="hero-lead" id="heroLead">첫 MVP를 실제 회사에 가깝게 만들기 위해 <b>고객님의 판단이 꼭 필요한 부분만</b> 확인합니다.</p>
 <div class="hero-summary" id="heroSummary">
@@ -179,12 +236,7 @@
   <button class="phasetab" id="tab1" onclick="switchPhase(1)"><b>1차 사전 체크리스트</b><small>지금 작성 · 개발 시작 전</small></button>
   <button class="phasetab" id="tab2" onclick="switchPhase(2)"><b>2차 고도화 체크리스트</b><small>1차 MVP를 써보신 뒤 작성</small></button>
 </div>
-<div class="layout"><aside class="side"><div class="ptext"><span>필수항목 진행률</span><b id="pct">0%</b></div><div class="track"><div id="bar" class="fill"></div></div><div class="datebox">작성 시작: <span id="startedAtSide">아직 시작 전</span><br>최근 자동저장: <span id="updatedAtSide">-</span></div><div id="nav"></div><div class="actions"><button class="kakao" onclick="saveKakaoResult()">카톡용 저장</button><button class="pdf" onclick="makePDF()">PDF 저장</button></div></aside><main id="content" class="content"></main></div></div>
-<div id="progressFloat" class="progress-float">
-  <div class="progress-float-top"><span class="progress-float-label">필수 진행률</span><span id="progressFloatPct" class="progress-float-pct">0%</span></div>
-  <div class="progress-float-track"><div id="progressFloatFill" class="progress-float-fill"></div></div>
-  <div id="progressFloatStage" class="progress-float-stage">0 / 9 완료</div>
-</div>
+<div class="layout"><aside class="side"><div class="datebox">작성 시작: <span id="startedAtSide">아직 시작 전</span><br>최근 자동저장: <span id="updatedAtSide">-</span></div><div id="nav"></div><div class="actions"><button class="kakao" onclick="saveKakaoResult()">카톡용 저장</button><button class="pdf" onclick="makePDF()">PDF 저장</button></div></aside><main class="maincol"><div id="stepbar" class="stepbar"></div><div id="content" class="content"></div></main></div></div>
 <div id="timerFloat" class="timer-float">
   <div class="timer-compact" onclick="toggleTimerPanel()">
     <button class="timer-mini-btn" aria-label="1분 줄이기" onclick="event.stopPropagation();adjustTimer(-60)">−</button>
@@ -343,30 +395,96 @@ let state={};try{state=JSON.parse(store.get()||"{}")||{}}catch(e){state={}}
 const esc=s=>String(s).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));
 function fmt(iso){if(!iso)return "-";return new Date(iso).toLocaleString("ko-KR",{year:"numeric",month:"2-digit",day:"2-digit",hour:"2-digit",minute:"2-digit",second:"2-digit",hour12:false})}
 function ensureStarted(){if(!state.__startedAt)state.__startedAt=new Date().toISOString()}
-function save(){ensureStarted();state.__updatedAt=new Date().toISOString();store.set(JSON.stringify(state));progressFloat.classList.add("show");updateProgress();renderTimes()}
+function save(){ensureStarted();state.__updatedAt=new Date().toISOString();store.set(JSON.stringify(state));updateProgress();renderTimes()}
 function renderTimes(){startedAtSide.textContent=state.__startedAt?fmt(state.__startedAt):"아직 시작 전";updatedAtSide.textContent=state.__updatedAt?fmt(state.__updatedAt):"-"}
 function guide(k){const g=help[k]||["이 질문은 고객님의 선택이 필요한 부분입니다.","현재 상황과 가장 가까운 항목을 골라주세요.","선택 결과를 기능·화면·우선순위에 반영합니다."];return `<div class="guide"><div><b>왜 이 정보가 필요한가요?</b> ${esc(g[0])}</div><div><b>예시</b> ${esc(g[1])}</div><div><b>어디에 반영되나요?</b> ${esc(g[2])}</div></div>`}
 function optHtml(t,k,o,i){const checked=t==="single"?state[k]===o:(Array.isArray(state[k])&&state[k].includes(o));const ev=t==="single"?`pickSingle('${k}',this.dataset.v)`:`toggleMulti('${k}',this.dataset.v,this.checked)`;return `<div class="opt"><input type="${t==="single"?"radio":"checkbox"}" id="${k}_${i}" data-v="${esc(o)}" ${t==="single"?`name="${k}"`:""} ${checked?"checked":""} onchange="${ev}"><label for="${k}_${i}">${esc(o)}${optMark(k,o)}</label></div>`}
 function groupedOptions(t,k,d){if(!groups[k])return `<div class="grid">${sortRec(k,d).map((o,i)=>optHtml(t,k,o,i)).join("")}</div>`;let idx=0;return `<div class="option-groups">${groups[k].map(g=>`<div class="opt-group"><div class="opt-group-title">${esc(g[0])}</div><div class="grid">${sortRec(k,g[1].filter(o=>d.includes(o))).map(o=>optHtml(t,k,o,idx++)).join("")}</div></div>`).join("")}</div>`}
 function renderQ(q,first){const[t,k,l,d]=q;let b="";if(t==="text")b=`<input class="textinput" value="${esc(state[k]||"")}" placeholder="${esc(d||"")}" oninput="state['${k}']=this.value;save()">`;else if(t==="long")b=`<textarea class="longtext" placeholder="${esc(d||"")}" oninput="state['${k}']=this.value;save()">${esc(state[k]||"")}</textarea>`;else if(t==="single"||t==="multi")b=groupedOptions(t,k,d);else b=`<label class="confirm"><input type="checkbox" ${state[k]?"checked":""} onchange="state['${k}']=this.checked;save()"><span>${esc(l)}</span></label>`;return `<div class="q ${first?"first-in-sub":""}"><div class="qlabel">${esc(l)}${qOptional(q)?' <span class="tag optional">선택</span>':""}</div>${guide(k)}${noteFor(k)}${b}</div>`}
-function renderSection(s){const[num,title,desc,level,qs0]=s,c=secColors[num],qs=qs0.filter(qVisible),subs=(subheads[num]||[["질문",qs0.map(q=>q[1])]]).filter(sub=>qs.some(q=>sub[1].includes(q[1])));let inner="";subs.forEach((sub,si)=>{const sq=qs.filter(q=>sub[1].includes(q[1]));if(!sq.length)return;inner+=`<div class="subsection-title">${si+1}. ${esc(sub[0])} <span class="subsection-count">${sq.length}개 질문</span></div>`+sq.map((q,i)=>renderQ(q,i===0)).join("")});return `<section class="section" id="sec_${num}" data-navtarget style="--sec-main:${c.main};--sec-soft:${c.soft};--sec-line:${c.line}"><div class="sectop"><div class="secmark"><div class="secnum" style="background:${c.main}">${num}</div><span class="req ${level==="필수"?"required":"optional"}">${level}</span></div><div><h2>${esc(title)}</h2><p class="desc">${esc(desc)}</p></div></div><div class="subroadmap"><div class="subroadmap-title">이 항목은 ${subs.length}개의 소목차로 구성됩니다.</div><div class="subchips">${subs.map((x,i)=>`<span class="subchip">${i+1}. ${esc(x[0])}</span>`).join("")}</div></div>${inner}</section>`}
-function render(){const sp=spec(),all=sp.core.concat(sp.optional);
-nav.innerHTML=`<button class="navbtn" data-target="guideTop" data-color="#17202b" onclick="goTo('guideTop')"><span class="navdot" style="background:#c5a15a"></span><span class="navtext">${phase===2?"2차 안내":"시작 전 안내"}</span><span class="tag optional">안내</span></button>`+all.map(x=>{const c=secColors[x[0]],req=x[3]==="필수";return `<button class="navbtn" data-target="sec_${x[0]}" data-color="${c.main}" onclick="goTo('sec_${x[0]}')"><span class="navdot" style="background:${c.main}"></span><span class="navtext">${x[0]} · ${esc(x[1])}</span><span class="tag ${req?"required":"optional"}">${req?"필수":"선택"}</span></button>`}).join("");
-content.innerHTML=introHTML()+sp.core.map(renderSection).join("")+(sp.optional.length?`<div class="optional-intro"><h2>선택 참고사항</h2>아래 내용은 이미 기본 설계에 포함되어 있거나, MVP 이후 실증과정에서 충분히 보완할 수 있는 정보입니다. <b>꼭 작성하지 않으셔도 됩니다.</b> 다만 현재 상황이나 향후 계획을 조금 더 알려주고 싶은 분만 편하게 입력해주세요.</div>`+sp.optional.map(renderSection).join(""):"")+`<div class="free-note"><h2>추가로 전달하고 싶은 내용 <span style="font-size:13px;color:#94a3b8">(선택사항)</span></h2><div class="hint">예: “현장 직원이 스마트폰으로 최대한 간단하게 쓰게 해주세요.”<br>예: “기존 엑셀 양식의 고객번호와 거래처 구분은 꼭 유지하고 싶습니다.”</div><textarea placeholder="자유롭게 입력해주세요." oninput="state.__freeNote=this.value;save()">${esc(state.__freeNote||"")}</textarea></div>`+finishBlock();
-syncTabs();updateProgress();renderTimes();setupObserver();setupReveal()}
+function renderSection(s,part){if(!Array.isArray(part))part=null;const[num,title,desc,level,qs0]=s,c=secColors[num],qs=qs0.filter(qVisible),
+all=(subheads[num]||[["질문",qs0.map(q=>q[1])]]).map((sub,idx)=>({sub,idx})).filter(o=>qs.some(q=>o.sub[1].includes(q[1]))),
+show=part?all.filter(o=>part.includes(o.idx)):all;let inner="";
+show.forEach(o=>{const sq=qs.filter(q=>o.sub[1].includes(q[1]));inner+=`<div class="subsection-title">${all.indexOf(o)+1}. ${esc(o.sub[0])} <span class="subsection-count">${sq.length}개 질문</span></div>`+sq.map((q,i)=>renderQ(q,i===0)).join("")});
+return `<section class="section" id="sec_${num}" data-navtarget style="--sec-main:${c.main};--sec-soft:${c.soft};--sec-line:${c.line}"><div class="sectop"><div class="secmark"><div class="secnum" style="background:${c.main}">${num}</div><span class="req ${level==="필수"?"required":"optional"}">${level}</span></div><div><h2>${esc(title)}</h2><p class="desc">${esc(desc)}</p></div></div><div class="subroadmap"><div class="subroadmap-title">이 항목은 ${all.length}개의 소목차로 구성됩니다.${part?` <span class="subpart">이 화면에서는 ${show.map(o=>all.indexOf(o)+1).join("·")}번을 작성합니다</span>`:""}</div><div class="subchips">${all.map((o,i)=>`<span class="subchip${part&&part.includes(o.idx)?" on":""}">${i+1}. ${esc(o.sub[0])}</span>`).join("")}</div></div>${inner}</section>`}
+/* ===== 주제별 한 장씩 보기 =====
+ * 한 화면에 주제(섹션) 하나만 보여주고, [다음]을 누르면 옆으로 넘어간다.
+ * 지금 보고 있는 단계는 state.__step 에 저장돼서, 나갔다 와도 그 자리에서 이어진다.
+ */
+/* 긴 섹션은 소목차 묶음으로 나눠 두 장으로 보여준다 (subheads 순서 기준 번호) */
+const STEP_SPLIT={"08":[[0,1],[2,3]]};
+function steps(){const sp=spec(),L=[{kind:"guide",label:"안내",title:phase===2?"2차 안내":"시작 전 안내"}];
+sp.core.forEach(s=>{const parts=STEP_SPLIT[s[0]];
+if(parts)parts.forEach((part,k)=>L.push({kind:"sec",sec:s,part,label:s[0]+"-"+(k+1),title:s[1]+" ("+(k+1)+"/"+parts.length+")"}));
+else L.push({kind:"sec",sec:s,label:s[0],title:s[1]})});
+if(sp.optional.length)L.push({kind:"optional",label:"선택",title:"선택 참고사항 (A~D)"});
+L.push({kind:"finish",label:"마무리",title:"마무리 · 저장"});return L}
+function stepName(s){return s.kind==="sec"?s.sec[0]+" · "+s.title:s.title}
+function stepQs(s){if(!s.part)return s.sec[4];const keys=s.part.flatMap(i=>((subheads[s.sec[0]]||[])[i]||["",[]])[1]);return s.sec[4].filter(q=>keys.includes(q[1]))}
+function stepDone(s){return s.kind==="sec"&&stepQs(s).every(qSatisfied)}
+function secDone(sec){return sec[4].every(qSatisfied)}
+/* 처음 오면 안내부터, 이미 쓰던 분은 아직 덜 쓴 첫 주제부터 */
+function defaultStep(){const L=steps();if(!rows().length)return 0;
+const i=L.findIndex(s=>s.kind==="sec"&&!stepDone(s));return i>=0?i:L.length-1}
+function curStep(){const n=steps().length;let s=Number(state.__step);if(!Number.isInteger(s))s=defaultStep();return Math.max(0,Math.min(n-1,s))}
+function optionalHTML(){return `<div class="optional-intro"><h2>선택 참고사항</h2>아래 내용은 이미 기본 설계에 포함되어 있거나, MVP 이후 실증과정에서 충분히 보완할 수 있는 정보입니다. <b>꼭 작성하지 않으셔도 됩니다.</b> 다만 현재 상황이나 향후 계획을 조금 더 알려주고 싶은 분만 편하게 입력해주세요.<div class="skiprow"><button type="button" class="sn-skip" onclick="goStep(steps().length-1)">이 단계 건너뛰고 마무리로 →</button></div></div>`+spec().optional.map(renderSection).join("")}
+function freeNoteHTML(){return `<div class="free-note"><h2>추가로 전달하고 싶은 내용 <span style="font-size:13px;color:#94a3b8">(선택사항)</span></h2><div class="hint">예: “현장 직원이 스마트폰으로 최대한 간단하게 쓰게 해주세요.”<br>예: “기존 엑셀 양식의 고객번호와 거래처 구분은 꼭 유지하고 싶습니다.”</div><textarea placeholder="자유롭게 입력해주세요." oninput="state.__freeNote=this.value;save()">${esc(state.__freeNote||"")}</textarea></div>`}
+function stepNavHTML(i){const L=steps(),s=L[i],nx=L[i+1],pv=L[i-1];
+const prev=pv?`<button type="button" class="sn-prev" onclick="goStep(${i-1})">← 이전</button>`:"";
+const next=nx?`<button type="button" class="sn-next" onclick="goStep(${i+1})">${s.kind==="guide"?"체크리스트 시작하기":"다음"} →<small>${esc(stepName(nx))}</small></button>`:"";
+const one=!(prev&&next);
+return `<div class="stepnav">${prev?(one?prev.replace('class="sn-prev"','class="sn-prev sn-only"'):prev):"<span></span>"}<div class="sn-status" id="snStatus"></div>${next?(one?next.replace('class="sn-next"','class="sn-next sn-only"'):next):"<span></span>"}</div>`}
+function stepHTML(i){const s=steps()[i];let body;
+if(s.kind==="guide")body=introHTML();
+else if(s.kind==="sec")body=renderSection(s.sec,s.part);
+else if(s.kind==="optional")body=optionalHTML();
+else body=freeNoteHTML()+finishBlock();
+return `<div class="step" data-step="${i}">${body}${stepNavHTML(i)}</div>`}
+function stepbarHTML(){return `<div class="sb-card"><div class="sb-row"><span class="sb-label">필수 진행률</span><b class="sb-pct" id="sbPct">0%</b><div class="sb-track"><div class="sb-fill" id="sbFill"></div></div><span class="sb-count" id="sbCount"></span></div><div class="sb-steps" id="sbSteps"></div></div>`}
+function reducedMotion(){return !!(window.matchMedia&&window.matchMedia("(prefers-reduced-motion:reduce)").matches)}
+let stepMoving=false;
+function goStep(n){const L=steps();n=Math.max(0,Math.min(L.length-1,n));const cur=curStep();if(n===cur||stepMoving)return;
+const dir=n>cur?1:-1;state.__step=n;store.set(JSON.stringify(state));
+const el=content.querySelector(".step");
+if(!el||reducedMotion()){showStep(dir);return}
+stepMoving=true;el.classList.add(dir>0?"step-out-left":"step-out-right");
+setTimeout(()=>{stepMoving=false;showStep(dir)},170)}
+function showStep(dir){content.innerHTML=stepHTML(curStep());
+const mc=document.querySelector(".maincol");if(mc){const top=mc.getBoundingClientRect().top+window.scrollY-6;if(window.scrollY>top)window.scrollTo(0,top)}
+const el=content.querySelector(".step");if(el&&dir&&!reducedMotion())el.classList.add(dir>0?"step-in-right":"step-in-left");
+updateProgress();setupReveal();centerChip()}
+function centerChip(){const st=document.getElementById("sbSteps"),c=st&&st.querySelector(".current");if(c)st.scrollLeft=c.offsetLeft-st.clientWidth/2+c.offsetWidth/2}
+function renderNav(){const L=steps(),cur=curStep(),nav=document.getElementById("nav");if(!nav)return;
+nav.innerHTML=L.map((s,i)=>{const isSec=s.kind==="sec",done=stepDone(s),color=isSec?secColors[s.sec[0]].main:"#17202b",
+dot=isSec?color:(s.kind==="guide"?"#c5a15a":"#94a3b8"),
+tag=isSec?(done?'<span class="tag done">완료</span>':(s.sec[3]==="필수"?'<span class="tag required">필수</span>':'<span class="tag optional">선택</span>')):(s.kind==="guide"?'<span class="tag optional">안내</span>':(s.kind==="optional"?'<span class="tag optional">선택</span>':""));
+return `<button class="navbtn${i===cur?" active":""}"${i===cur?` style="background:${color}"`:""} onclick="goStep(${i})"><span class="navdot" style="background:${dot}"></span><span class="navtext">${esc(stepName(s))}</span>${tag}</button>`}).join("")}
+function stepStatus(s){if(s.kind==="sec"){const left=stepQs(s).filter(q=>!qSatisfied(q)).length;
+return left?{t:`아직 답하지 않은 질문 ${left}개 · 넘어가도 나중에 다시 할 수 있어요`,ok:false}:{t:s.part?"✓ 이 화면은 다 작성하셨어요":"✓ 이 주제는 다 작성하셨어요",ok:true}}
+if(s.kind==="guide")return{t:phase===2?"약 7~10분 걸립니다":"약 10~15분 걸립니다 · 중간에 나가도 자동 저장돼요",ok:false};
+if(s.kind==="optional")return{t:"꼭 안 쓰셔도 됩니다. 바로 넘어가셔도 돼요",ok:false};
+return{t:"",ok:false}}
+function render(){const sb=document.getElementById("stepbar");if(sb)sb.innerHTML=stepbarHTML();
+if(state.__step==null||!Number.isInteger(Number(state.__step)))state.__step=defaultStep();
+content.innerHTML=stepHTML(curStep());
+syncTabs();updateProgress();renderTimes();setupReveal();centerChip()}
 function pickSingle(k,v){state[k]=v;save();if(k==="industry"){const y=window.scrollY;render();window.scrollTo(0,y)}}
 function finishBlock(){return `<div class="finish"><h2>${phase===2?"2차 체크리스트 작성이 끝나셨나요?":"작성이 끝나셨나요?"}</h2><p>아래 버튼으로 결과를 저장한 뒤 담당자에게 전달해주세요.</p><div id="finishStage" class="finish-stage">필수 0 / 9 완료</div>${osBlock()}<div class="finish-actions"><button class="bigbtn" onclick="saveKakaoResult()">카톡용 저장<small>복사 + TXT 파일 저장</small></button><button class="bigbtn pdf" onclick="makePDF()">PDF 저장<small>인쇄 화면에서 PDF 선택</small></button></div><p class="finish-hint">작성 내용은 이 기기에 자동 저장되어 있어, 중간에 나갔다가 다시 들어와도 이어서 작성하실 수 있습니다.</p></div>`}
 function toggleMulti(k,v,c){const before=k==="ext_tools"?usesTools():null;let a=Array.isArray(state[k])?state[k]:[];if(c&&!a.includes(v))a.push(v);if(!c)a=a.filter(x=>x!==v);state[k]=a;save();if(before!==null&&before!==usesTools()){const y=window.scrollY;render();window.scrollTo(0,y)}}
 function isAnswered(q){const[t,k]=q,v=state[k];if(t==="confirm")return v===true;if(Array.isArray(v))return v.length>0;return String(v||"").trim()!==""}
-function updateProgress(){const sp=spec();const completed=sp.core.filter(sec=>sec[4].every(qSatisfied)).length;const total=sp.core.length;const p=Math.round(completed/total*100);pct.textContent=p+"%";bar.style.width=p+"%";progressFloatPct.textContent=p+"%";progressFloatFill.style.width=p+"%";progressFloatStage.textContent=`${completed} / ${total} 완료`;const fst=document.getElementById("finishStage");if(fst){fst.textContent=completed===total?`필수 항목 ${total}개를 모두 작성하셨습니다.`:`필수 ${total}개 중 ${completed}개 완료 · 남은 항목이 있어도 저장할 수 있습니다.`}if(state.__startedAt||completed>0)progressFloat.classList.add("show");else progressFloat.classList.remove("show")}
+function updateProgress(){const sp=spec(),L=steps(),cur=curStep();const completed=sp.core.filter(secDone).length;const total=sp.core.length;const p=Math.round(completed/total*100);
+const g=id=>document.getElementById(id);
+if(g("sbPct"))g("sbPct").textContent=p+"%";if(g("sbFill"))g("sbFill").style.width=p+"%";if(g("sbCount"))g("sbCount").textContent=`${completed} / ${total} 완료`;
+const ss=g("sbSteps");if(ss){const keep=ss.scrollLeft;ss.innerHTML=L.map((x,i)=>`<button type="button" class="sb-chip ${i===cur?"current":(stepDone(x)?"done":"")}" onclick="goStep(${i})" title="${esc(stepName(x))}">${esc(i===cur?stepName(x):x.label)}</button>`).join("");ss.scrollLeft=keep}
+renderNav();
+const st=g("snStatus");if(st){const r=stepStatus(L[cur]);st.textContent=r.t;st.classList.toggle("ok",r.ok)}
+const fst=g("finishStage");if(fst){fst.textContent=completed===total?`필수 항목 ${total}개를 모두 작성하셨습니다.`:`필수 ${total}개 중 ${completed}개 완료 · 남은 항목이 있어도 저장할 수 있습니다.`}}
 function setupReveal(){const els=[...document.querySelectorAll(".reveal")];if(!els.length)return;
 const reduce=window.matchMedia&&window.matchMedia("(prefers-reduced-motion:reduce)").matches;
 if(reduce||!("IntersectionObserver" in window)){els.forEach(e=>e.classList.add("in"));return}
 if(window.__rv)window.__rv.disconnect();
 const ob=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add("in");ob.unobserve(e.target)}}),{rootMargin:"0px 0px -6% 0px",threshold:.06});
 window.__rv=ob;els.forEach(e=>ob.observe(e))}
-function setupObserver(){const ss=[...document.querySelectorAll("[data-navtarget]")];if(window.__ob)window.__ob.disconnect();if(!ss.length)return;const ob=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){document.querySelectorAll(".navbtn").forEach(b=>{b.classList.remove("active");b.style.background=""});const b=document.querySelector('.navbtn[data-target="'+e.target.id+'"]');if(b){b.classList.add("active");b.style.background=b.dataset.color||"#17202b"}}}),{rootMargin:"-20% 0px -65% 0px"});window.__ob=ob;ss.forEach(x=>ob.observe(x))}
-function startTimer(){ensureStarted();save();progressFloat.classList.add("show");timerFloat.classList.add("show");timerFloat.classList.remove("expanded");timer.running=true;timer.paused=false;if(timer.interval)clearInterval(timer.interval);timer.interval=setInterval(()=>{if(!timer.paused&&timer.remaining>0){timer.remaining--;updateTimer()}if(timer.remaining<=0){clearInterval(timer.interval);timer.running=false;timerTime.textContent="00:00";pauseBtn.textContent="완료"}},1000);updateTimer()}
+function startTimer(){ensureStarted();save();timerFloat.classList.add("show");timerFloat.classList.remove("expanded");timer.running=true;timer.paused=false;if(timer.interval)clearInterval(timer.interval);timer.interval=setInterval(()=>{if(!timer.paused&&timer.remaining>0){timer.remaining--;updateTimer()}if(timer.remaining<=0){clearInterval(timer.interval);timer.running=false;timerTime.textContent="00:00";pauseBtn.textContent="완료"}},1000);updateTimer()}
 function updateTimer(){const m=Math.floor(timer.remaining/60),s=timer.remaining%60;timerTime.textContent=String(m).padStart(2,"0")+":"+String(s).padStart(2,"0");pauseBtn.textContent=timer.paused?"계속":"일시정지"}
 function toggleTimerPanel(){timerFloat.classList.toggle("expanded")}
 function adjustTimer(seconds){timer.remaining=Math.max(0,Math.min(99*60+59,timer.remaining+seconds));updateTimer();if(timer.remaining>0&&timer.running===false){pauseBtn.textContent="시작"}}
@@ -438,7 +556,6 @@ const SPEC1={core:core,optional:optional,title:"미래AI랩 AX 1차 사전 희�
 const SPEC2={core:core2,optional:[],title:"미래AI랩 AX 2차 고도화 체크리스트 v1.0",file:"AX_2차_고도화체크리스트",label:"2차 고도화 체크리스트"};
 function spec(){return phase===2?SPEC2:SPEC1}
 function activeKey(){return phase===2?KEY2:KEY}
-function goTo(id){const el=document.getElementById(id);if(el)el.scrollIntoView({behavior:"smooth",block:"start"})}
 function switchPhase(p){if(p===phase)return;if(Object.keys(state).length)save();phase=p;try{localStorage.setItem(PHASEKEY,String(p))}catch(e){}
 try{state=JSON.parse(store.get()||"{}")||{}}catch(e){state={}}
 try{if(history.replaceState)history.replaceState(null,"",p===2?"#phase2":"#phase1")}catch(e){}
